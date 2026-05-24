@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64)">
+  <diagram id="simplified-ucd" name="Use Case Diagram">
+    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="1400" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Actors -->
+        <mxCell id="actor-sa" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Super Admin" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="Admin" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" value="User" vertex="1">
+          <mxGeometry height="60" width="30" x="50" y="700" as="geometry" />
+        </mxCell>
+
+        <!-- System Boundary -->
+        <mxCell id="sys" parent="1" style="swimlane;startSize=30;fillColor=none;strokeColor=#666666;strokeWidth=2;fontSize=14;fontStyle=1;align=center;swimlaneLine=1;" value="Point of Sale System" vertex="1">
+          <mxGeometry height="960" width="1110" x="130" y="50" as="geometry" />
+        </mxCell>
+
+        <!-- 1. Authentication -->
+        <mxCell id="s1" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;swimlaneLine=1;" value="1. Authentication" vertex="1">
+          <mxGeometry height="210" width="320" x="20" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-login" parent="s1" style="ellipse;whiteSpace=wrap;html=1;" value="Login" vertex="1">
+          <mxGeometry height="40" width="100" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-logout" parent="s1" style="ellipse;whiteSpace=wrap;html=1;" value="Logout" vertex="1">
+          <mxGeometry height="40" width="100" x="205" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-register" parent="s1" style="ellipse;whiteSpace=wrap;html=1;" value="Register Admin/User" vertex="1">
+          <mxGeometry height="40" width="150" x="15" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-forgot" parent="s1" style="ellipse;whiteSpace=wrap;html=1;" value="Forgot/Reset Password" vertex="1">
+          <mxGeometry height="40" width="150" x="155" y="95" as="geometry" />
+        </mxCell>
+        <mxCell id="s1-change" parent="s1" style="ellipse;whiteSpace=wrap;html=1;" value="Change Password" vertex="1">
+          <mxGeometry height="40" width="135" x="90" y="155" as="geometry" />
+        </mxCell>
+
+        <!-- 2. Profile -->
+        <mxCell id="s2" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="2. Profile" vertex="1">
+          <mxGeometry height="110" width="240" x="360" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-view" parent="s2" style="ellipse;whiteSpace=wrap;html=1;" value="View Profile" vertex="1">
+          <mxGeometry height="40" width="100" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s2-update" parent="s2" style="ellipse;whiteSpace=wrap;html=1;" value="Update Profile" vertex="1">
+          <mxGeometry height="40" width="110" x="120" y="35" as="geometry" />
+        </mxCell>
+
+        <!-- 3. Shop Management -->
+        <mxCell id="s3" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="3. Shop Management" vertex="1">
+          <mxGeometry height="200" width="430" x="630" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-view" parent="s3" style="ellipse;whiteSpace=wrap;html=1;" value="View Shops" vertex="1">
+          <mxGeometry height="40" width="110" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-create" parent="s3" style="ellipse;whiteSpace=wrap;html=1;" value="Create Shop" vertex="1">
+          <mxGeometry height="40" width="110" x="160" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-update" parent="s3" style="ellipse;whiteSpace=wrap;html=1;" value="Update Shop" vertex="1">
+          <mxGeometry height="40" width="110" x="305" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-delete" parent="s3" style="ellipse;whiteSpace=wrap;html=1;" value="Delete Shop" vertex="1">
+          <mxGeometry height="40" width="110" x="15" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s3-staff" parent="s3" style="ellipse;whiteSpace=wrap;html=1;" value="Manage Staff" vertex="1">
+          <mxGeometry height="40" width="120" x="160" y="110" as="geometry" />
+        </mxCell>
+
+        <!-- 4. Product Management -->
+        <mxCell id="s4" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="4. Product Management" vertex="1">
+          <mxGeometry height="210" width="380" x="20" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s4-cat" parent="s4" style="ellipse;whiteSpace=wrap;html=1;" value="Manage Categories" vertex="1">
+          <mxGeometry height="40" width="145" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s4-view" parent="s4" style="ellipse;whiteSpace=wrap;html=1;" value="View Products" vertex="1">
+          <mxGeometry height="40" width="125" x="185" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s4-create" parent="s4" style="ellipse;whiteSpace=wrap;html=1;" value="Create Product" vertex="1">
+          <mxGeometry height="40" width="125" x="15" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s4-update" parent="s4" style="ellipse;whiteSpace=wrap;html=1;" value="Update Product" vertex="1">
+          <mxGeometry height="40" width="125" x="160" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s4-delete" parent="s4" style="ellipse;whiteSpace=wrap;html=1;" value="Delete Product" vertex="1">
+          <mxGeometry height="40" width="125" x="80" y="160" as="geometry" />
+        </mxCell>
+
+        <!-- 5. Inventory -->
+        <mxCell id="s5" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="5. Inventory" vertex="1">
+          <mxGeometry height="210" width="420" x="420" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="s5-view" parent="s5" style="ellipse;whiteSpace=wrap;html=1;" value="View Inventory" vertex="1">
+          <mxGeometry height="40" width="115" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s5-restock" parent="s5" style="ellipse;whiteSpace=wrap;html=1;" value="Restock" vertex="1">
+          <mxGeometry height="40" width="90" x="150" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s5-adj" parent="s5" style="ellipse;whiteSpace=wrap;html=1;" value="Adjust Stock Out" vertex="1">
+          <mxGeometry height="40" width="135" x="270" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s5-hist" parent="s5" style="ellipse;whiteSpace=wrap;html=1;" value="View Movement History" vertex="1">
+          <mxGeometry height="40" width="165" x="15" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s5-thresh" parent="s5" style="ellipse;whiteSpace=wrap;html=1;" value="Set Low Stock Threshold" vertex="1">
+          <mxGeometry height="40" width="175" x="210" y="100" as="geometry" />
+        </mxCell>
+
+        <!-- 6. Stock Transfer -->
+        <mxCell id="s6" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="6. Stock Transfer (Inter-Shop)" vertex="1">
+          <mxGeometry height="190" width="450" x="20" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="s6-create" parent="s6" style="ellipse;whiteSpace=wrap;html=1;" value="Create Transfer" vertex="1">
+          <mxGeometry height="40" width="130" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s6-view" parent="s6" style="ellipse;whiteSpace=wrap;html=1;" value="View Transfers" vertex="1">
+          <mxGeometry height="40" width="130" x="165" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s6-approve" parent="s6" style="ellipse;whiteSpace=wrap;html=1;" value="Approve Transfer" vertex="1">
+          <mxGeometry height="40" width="130" x="15" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s6-reject" parent="s6" style="ellipse;whiteSpace=wrap;html=1;" value="Reject Transfer" vertex="1">
+          <mxGeometry height="40" width="120" x="165" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s6-cancel" parent="s6" style="ellipse;whiteSpace=wrap;html=1;" value="Cancel Transfer" vertex="1">
+          <mxGeometry height="40" width="120" x="310" y="110" as="geometry" />
+        </mxCell>
+
+        <!-- 7. Transactions -->
+        <mxCell id="s7" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="7. Transactions" vertex="1">
+          <mxGeometry height="190" width="350" x="490" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="s7-create" parent="s7" style="ellipse;whiteSpace=wrap;html=1;" value="Create Transaction" vertex="1">
+          <mxGeometry height="40" width="145" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s7-view" parent="s7" style="ellipse;whiteSpace=wrap;html=1;" value="View Transactions" vertex="1">
+          <mxGeometry height="40" width="145" x="185" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s7-cancel" parent="s7" style="ellipse;whiteSpace=wrap;html=1;" value="Cancel Transaction" vertex="1">
+          <mxGeometry height="40" width="145" x="15" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="s7-detail" parent="s7" style="ellipse;whiteSpace=wrap;html=1;" value="View Detail" vertex="1">
+          <mxGeometry height="40" width="110" x="215" y="110" as="geometry" />
+        </mxCell>
+
+        <!-- 8. Refunds -->
+        <mxCell id="s8" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="8. Refunds" vertex="1">
+          <mxGeometry height="120" width="280" x="20" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="s8-create" parent="s8" style="ellipse;whiteSpace=wrap;html=1;" value="Create Refund" vertex="1">
+          <mxGeometry height="40" width="115" x="15" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="s8-view" parent="s8" style="ellipse;whiteSpace=wrap;html=1;" value="View Refunds" vertex="1">
+          <mxGeometry height="40" width="115" x="150" y="40" as="geometry" />
+        </mxCell>
+
+        <!-- 9. Customers -->
+        <mxCell id="s9" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="9. Customers" vertex="1">
+          <mxGeometry height="210" width="390" x="320" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="s9-view" parent="s9" style="ellipse;whiteSpace=wrap;html=1;" value="View Customers" vertex="1">
+          <mxGeometry height="40" width="135" x="15" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s9-create" parent="s9" style="ellipse;whiteSpace=wrap;html=1;" value="Create Customer" vertex="1">
+          <mxGeometry height="40" width="130" x="170" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="s9-update" parent="s9" style="ellipse;whiteSpace=wrap;html=1;" value="Update Customer" vertex="1">
+          <mxGeometry height="40" width="130" x="15" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s9-delete" parent="s9" style="ellipse;whiteSpace=wrap;html=1;" value="Delete Customer" vertex="1">
+          <mxGeometry height="40" width="130" x="165" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="s9-hist" parent="s9" style="ellipse;whiteSpace=wrap;html=1;" value="View Transaction History" vertex="1">
+          <mxGeometry height="40" width="175" x="100" y="160" as="geometry" />
+        </mxCell>
+
+        <!-- 10. Audit Log -->
+        <mxCell id="s10" parent="sys" style="swimlane;startSize=25;fontSize=12;fontStyle=1;" value="10. Audit Log" vertex="1">
+          <mxGeometry height="110" width="260" x="730" y="740" as="geometry" />
+        </mxCell>
+        <mxCell id="s10-view" parent="s10" style="ellipse;whiteSpace=wrap;html=1;" value="View Audit Log" vertex="1">
+          <mxGeometry height="40" width="135" x="60" y="35" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

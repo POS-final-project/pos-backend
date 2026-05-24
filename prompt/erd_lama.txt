@@ -1,0 +1,258 @@
+// ============================================================
+//  POS SYSTEM — Core ERD (Simple Version)
+//  Paste ke https://dbdiagram.io/d
+// ============================================================
+
+// ── SHOPS ──────────────────────────────────────────────────
+Table shops {
+  id          uuid      [pk]
+  name        varchar   [not null]
+  address     text
+  phone       varchar
+  is_active   boolean   [not null, default: true]
+  created_at  timestamp [not null, default: `now()`]
+  updated_at  timestamp [not null, default: `now()`]
+}
+
+// ── USERS ──────────────────────────────────────────────────
+Table users {
+  id          uuid      [pk]
+  name        varchar   [not null]
+  email       varchar   [not null, unique]
+  password    varchar   [not null]
+  role        varchar   [not null, note: 'superadmin | admin | user']
+  is_active   boolean   [not null, default: true]
+  created_at  timestamp [not null, default: `now()`]
+  updated_at  timestamp [not null, default: `now()`]
+}
+
+// Relasi user ke toko (many-to-many)
+// SuperAdmin tidak perlu entri di sini — akses global via role
+Table user_shops {
+  user_id  uuid [ref: > users.id, not null]
+  shop_id  uuid [ref: > shops.id, not null]
+
+  indexes {
+    (user_id, shop_id) [pk]
+  }
+}
+
+// ── CATEGORIES ─────────────────────────────────────────────
+// Global — dikelola SuperAdmin, berlaku semua toko
+Table categories {
+  id          uuid      [pk]
+  name        varchar   [not null]
+  created_at  timestamp [not null, default: `now()`]
+  updated_at  timestamp [not null, default: `now()`]
+}
+
+// ── PRODUCTS ───────────────────────────────────────────────
+// Global — satu produk berlaku di semua toko
+// Stok per toko ada di tabel inventory (terikat ke product_variants)
+Table products {
+  id          uuid      [pk]
+  category_id uuid      [ref: > categories.id, null]
+  name        varchar   [not null]
+  sku         varchar   [not null, unique, note: 'Kode unik global']
+  description text
+  image_url   varchar
+  is_active   boolean   [not null, default: true]
+  created_at  timestamp [not null, default: `now()`]
+  updated_at  timestamp [not null, default: `now()`]
+
+  Note: 'Produk tanpa variant tetap wajib punya minimal 1 variant (default)'
+}
+
+// ── PRODUCT VARIANTS ───────────────────────────────────────
+// Setiap produk wajib punya minimal 1 variant
+// Jika produk tidak punya variant, buat 1 variant default (nama = nama produk)
+// cost_price TIDAK ada di sini — dipindah ke inventory karena
+// average cost bisa berbeda per toko tergantung harga beli masing-masing cabang
+Table product_variants {
+  id         uuid      [pk]
+  product_id uuid      [ref: > products.id, not null]
+  name       varchar   [not null, note: 'Misal: Small, Medium, Large — atau nama produk jika tidak ada variant']
+  sku        varchar   [not null, unique, note: 'SKU per variant, misal: KS-001-S']
+  price      decimal   [not null, default: 0, note: 'Harga jual — berlaku global semua toko']
+  is_active  boolean   [not null, default: true]
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+}
+
+// ── INVENTORY ──────────────────────────────────────────────
+// Stok per variant per toko
+// Satu baris = satu kombinasi (shop + variant)
+Table inventory {
+  id                 uuid      [pk]
+  shop_id            uuid      [ref: > shops.id, not null]
+  product_variant_id uuid      [ref: > product_variants.id, not null]
+  stock              integer   [not null, default: 0]
+  avg_cost_price     decimal   [not null, default: 0, note: 'Average cost per toko. Dihitung ulang setiap restock: ((stock_lama x avg_cost_lama) + (qty_baru x cost_baru)) / (stock_lama + qty_baru)']
+  low_stock_threshold integer  [not null, default: 5, note: 'Hanya bisa diset Admin ke atas']
+  updated_at         timestamp [not null, default: `now()`]
+
+  indexes {
+    (shop_id, product_variant_id) [unique, name: 'uq_inventory_shop_variant']
+  }
+
+  Note: 'Stok tidak boleh diedit langsung — selalu lewat stock_movements. avg_cost_price diupdate otomatis saat ada restock.'
+}
+
+// ── STOCK MOVEMENTS ────────────────────────────────────────
+// Setiap perubahan stok wajib tercatat di sini
+// Berfungsi sebagai audit trail lengkap semua perubahan stok
+Table stock_movements {
+  id                 uuid      [pk]
+  shop_id            uuid      [ref: > shops.id, not null]
+  user_id            uuid      [ref: > users.id, not null]
+  product_variant_id uuid      [ref: > product_variants.id, not null]
+  reference_type     varchar   [null, note: 'transaction | transfer | manual']
+  reference_id       uuid      [null, note: 'ID dari tabel referensi terkait']
+  type               varchar   [not null, note: 'sale | restock | transfer_in | transfer_out | adjustment | refund']
+  qty                integer   [not null, note: 'Positif = stok masuk, Negatif = stok keluar']
+  cost_price         decimal   [null, note: 'Harga beli per unit — diisi hanya saat type = restock, untuk menghitung ulang avg_cost_price']
+  stock_before       integer   [not null, note: 'Stok sebelum movement ini']
+  stock_after        integer   [not null, note: 'Stok setelah movement ini']
+  avg_cost_before    decimal   [not null, default: 0, note: 'Snapshot avg_cost_price sebelum movement — untuk audit']
+  avg_cost_after     decimal   [not null, default: 0, note: 'Snapshot avg_cost_price setelah movement — untuk audit']
+  note               text
+  created_at         timestamp [not null, default: `now()`]
+
+  Note: 'cost_price hanya relevan saat type=restock. Untuk sale/transfer/adjustment, cost yang dipakai adalah avg_cost_price dari inventory saat itu.'
+}
+
+// ── CUSTOMERS ──────────────────────────────────────────────
+// Global — tidak terikat ke satu toko
+Table customers {
+  id         uuid      [pk]
+  name       varchar   [not null]
+  phone      varchar
+  email      varchar
+  address    text
+  created_at timestamp [not null, default: `now()`]
+  updated_at timestamp [not null, default: `now()`]
+}
+
+// ── TRANSACTIONS ───────────────────────────────────────────
+Table transactions {
+  id             uuid      [pk]
+  shop_id        uuid      [ref: > shops.id, not null]
+  user_id        uuid      [ref: > users.id, not null, note: 'Kasir yang membuat transaksi']
+  customer_id    uuid      [ref: > customers.id, null, note: 'Nullable — transaksi bisa anonim']
+  invoice_no     varchar   [not null, unique, note: 'Format: INV-YYYYMMDD-XXXX']
+  status         varchar   [not null, note: 'pending | completed | cancelled']
+  payment_method varchar   [not null, note: 'cash | transfer | qris | credit']
+  subtotal       decimal   [not null, default: 0]
+  discount       decimal   [not null, default: 0]
+  total          decimal   [not null, default: 0]
+  note           text
+  created_at     timestamp [not null, default: `now()`]
+  updated_at     timestamp [not null, default: `now()`]
+}
+
+// ── TRANSACTION ITEMS ──────────────────────────────────────
+Table transaction_items {
+  id                 uuid    [pk]
+  transaction_id     uuid    [ref: > transactions.id, not null]
+  product_variant_id uuid    [ref: > product_variants.id, not null]
+  qty                integer [not null]
+  price              decimal [not null, note: 'Snapshot harga jual saat transaksi — tidak berubah meski harga produk diupdate']
+  cost_price         decimal [not null, default: 0, note: 'Snapshot avg_cost_price dari inventory saat transaksi terjadi — untuk kalkulasi profit: (price - cost_price) x qty']
+  discount           decimal [not null, default: 0]
+  subtotal           decimal [not null]
+
+  Note: 'Baik price maupun cost_price adalah snapshot — laporan profit historis tetap akurat meski harga berubah di kemudian hari'
+}
+
+// ── REFUNDS ────────────────────────────────────────────────
+// Refund bisa per item, tidak harus seluruh transaksi
+Table refunds {
+  id             uuid      [pk]
+  user_id        uuid      [ref: > users.id, not null, note: 'Kasir/admin yang memproses refund']
+  transaction_id uuid      [ref: > transactions.id, not null]
+  reason         text
+  total_amount   decimal   [not null, default: 0, note: 'Total nilai yang dikembalikan']
+  status         varchar   [not null, note: 'pending | approved | rejected']
+  created_at     timestamp [not null, default: `now()`]
+  updated_at     timestamp [not null, default: `now()`]
+
+  Note: 'Saat status = approved, otomatis buat stock_movements type=refund untuk setiap item yang dikembalikan'
+}
+
+// Detail item yang direfund
+Table refund_items {
+  id                  uuid    [pk]
+  refund_id           uuid    [ref: > refunds.id, not null]
+  transaction_item_id uuid    [ref: > transaction_items.id, not null]
+  qty                 integer [not null, note: 'Qty yang dikembalikan — tidak boleh melebihi qty di transaction_item']
+  amount              decimal [not null, note: 'Nilai yang dikembalikan untuk item ini']
+}
+
+// ── AI CHAT SESSIONS ───────────────────────────────────────
+// Satu sesi = satu thread percakapan
+// User bisa clear sesi ini tanpa hapus sesi lain
+Table ai_chat_sessions {
+  id             uuid      [pk]
+  user_id        uuid      [ref: > users.id, not null]
+  scope          varchar   [not null, note: 'global | shop — global untuk superadmin, shop untuk admin']
+  shop_id        uuid      [ref: > shops.id, null, note: 'Null jika scope = global']
+  last_active_at timestamp [not null, default: `now()`]
+  created_at     timestamp [not null, default: `now()`]
+}
+
+// Isi percakapan per sesi
+Table ai_chat_messages {
+  id         uuid      [pk]
+  session_id uuid      [ref: > ai_chat_sessions.id, not null]
+  role       varchar   [not null, note: 'user | assistant']
+  content    text      [not null]
+  created_at timestamp [not null, default: `now()`]
+}
+
+// ── AI INSIGHTS ────────────────────────────────────────────
+// Hasil generate insight terjadwal (daily, weekly, monthly)
+Table ai_insights {
+  id              uuid      [pk]
+  shop_id         uuid      [ref: > shops.id, null, note: 'Null jika insight global lintas toko (superadmin)']
+  period_type     varchar   [not null, note: 'daily | weekly | monthly | yearly']
+  period_start    date      [not null]
+  period_end      date      [not null]
+  summary         text      [not null, note: 'Narasi ringkasan dari LLM']
+  recommendations json      [null, note: 'Array rekomendasi aksi konkret dari LLM']
+  anomalies       json      [null, note: 'Array anomali yang terdeteksi LLM']
+  generated_at    timestamp [not null, default: `now()`]
+
+  Note: 'Setelah dibuat, langsung trigger notifikasi ke admin/superadmin yang bersangkutan'
+}
+
+// ── NOTIFICATIONS ──────────────────────────────────────────
+Table notifications {
+  id         uuid      [pk]
+  user_id    uuid      [ref: > users.id, not null]
+  shop_id    uuid      [ref: > shops.id, null, note: 'Null jika notifikasi global']
+  type       varchar   [not null, note: 'low_stock | transfer_incoming | transfer_confirmed | transfer_rejected | insight | refund | system']
+  title      varchar   [not null]
+  body       text      [not null]
+  data       json      [null, note: 'Payload tambahan, misal: { "insight_id": "...", "transfer_id": "..." }']
+  is_read    boolean   [not null, default: false]
+  created_at timestamp [not null, default: `now()`]
+
+  Note: 'Kolom data (JSON) dipakai untuk menyimpan referensi ke entitas terkait tanpa FK tambahan'
+}
+
+// ── AUDIT LOGS ─────────────────────────────────────────────
+Table audit_logs {
+  id          uuid      [pk]
+  user_id     uuid      [ref: > users.id, null, note: 'Null jika aksi dilakukan oleh sistem atau scheduler AI']
+  shop_id     uuid      [ref: > shops.id, null]
+  entity_type varchar   [not null, note: 'Nama tabel yang diubah: products | users | inventory | transactions | dll']
+  entity_id   uuid      [not null, note: 'ID record yang diubah']
+  action      varchar   [not null, note: 'create | update | delete | login | logout']
+  old_values  json      [null, note: 'Nilai kolom sebelum perubahan — null untuk action create']
+  new_values  json      [null, note: 'Nilai kolom setelah perubahan — null untuk action delete']
+  ip_address  varchar   [null]
+  user_agent  varchar   [null]
+  created_at  timestamp [not null, default: `now()`]
+
+  Note: 'old_values dan new_values memudahkan audit: bisa tahu persis kolom apa yang berubah dan kapan'
+}

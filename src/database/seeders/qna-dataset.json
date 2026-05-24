@@ -1,0 +1,1953 @@
+﻿[
+  {
+    "id": "pos_001",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua toko yang aktif beserta alamatnya",
+    "query": "SELECT name, address, phone FROM shops WHERE is_active = TRUE ORDER BY name",
+    "difficulty": "simple",
+    "domain": "toko",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_002",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua kasir yang aktif",
+    "query": "SELECT name, email, phone FROM users WHERE role = 'user' AND is_active = TRUE ORDER BY name",
+    "difficulty": "simple",
+    "domain": "pengguna",
+    "edge_cases": [
+      "soft_delete",
+      "role_filter"
+    ],
+    "tables_used": [
+      "users"
+    ]
+  },
+  {
+    "id": "pos_003",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua kategori produk",
+    "query": "SELECT id, name FROM categories ORDER BY name",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [],
+    "tables_used": [
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_004",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua produk aktif beserta nama kategorinya",
+    "query": "SELECT p.name AS produk, c.name AS kategori FROM products p JOIN categories c ON p.category_id = c.id WHERE p.is_active = TRUE ORDER BY c.name, p.name",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_005",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua varian produk Aqua Botol beserta harganya",
+    "query": "SELECT pv.name AS varian, pv.sku, pv.price FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE p.name = 'Aqua Botol' AND pv.is_active = TRUE ORDER BY pv.price",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_006",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua pelanggan yang memiliki alamat email",
+    "query": "SELECT name, email, phone FROM customers WHERE email IS NOT NULL ORDER BY name",
+    "difficulty": "simple",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "null_handling"
+    ],
+    "tables_used": [
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_007",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transaksi yang sudah di-refund",
+    "query": "SELECT invoice_no, shop_id, subtotal, payment_method, created_at FROM transactions WHERE status = 'refunded' ORDER BY created_at DESC",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_008",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transfer stok yang masih menunggu persetujuan",
+    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, tf.note, tf.created_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE tf.status = 'pending' ORDER BY tf.created_at DESC",
+    "difficulty": "simple",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_009",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua refund yang sudah disetujui beserta alasannya",
+    "query": "SELECT r.id, r.transaction_id, r.total_amount, r.reason, r.created_at FROM refunds r WHERE r.status = 'approved' ORDER BY r.created_at DESC",
+    "difficulty": "simple",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "refunds"
+    ]
+  },
+  {
+    "id": "pos_010",
+    "db_id": "pos_backend",
+    "question": "Berapa total transaksi yang diselesaikan di bulan Maret 2026?",
+    "query": "SELECT COUNT(*) AS total_transaksi FROM transactions WHERE status = 'selesai' AND DATE_TRUNC('month', paid_at) = '2026-03-01'",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions"
+    ],
+    "notes": "paid_at dipakai karena menunjukkan waktu pembayaran terjadi, bukan waktu transaksi dibuat"
+  },
+  {
+    "id": "pos_011",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 10 transaksi terbaru berdasarkan waktu pembayaran",
+    "query": "SELECT invoice_no, shop_id, subtotal, payment_method, paid_at FROM transactions WHERE status = 'selesai' ORDER BY paid_at DESC LIMIT 10",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_012",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua produk dalam kategori Minuman",
+    "query": "SELECT p.name, p.description FROM products p JOIN categories c ON p.category_id = c.id WHERE c.name = 'Minuman' AND p.is_active = TRUE ORDER BY p.name",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_013",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua varian produk dengan harga di bawah 10.000 rupiah",
+    "query": "SELECT pv.sku, pv.name AS varian, pv.price, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.price < 10000 AND pv.is_active = TRUE ORDER BY pv.price",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_014",
+    "db_id": "pos_backend",
+    "question": "Tampilkan stok saat ini untuk semua varian di toko Salamart Dalangan",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, inv.stock, inv.reserved_stock, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' ORDER BY p.name, pv.name",
+    "difficulty": "simple",
+    "domain": "inventori",
+    "edge_cases": [],
+    "tables_used": [
+      "inventory",
+      "product_variants",
+      "products",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_015",
+    "db_id": "pos_backend",
+    "question": "Berapa jumlah pelanggan yang terdaftar?",
+    "query": "SELECT COUNT(*) AS jumlah_pelanggan FROM customers",
+    "difficulty": "simple",
+    "domain": "pelanggan",
+    "edge_cases": [],
+    "tables_used": [
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_016",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua pengguna beserta toko tempatnya bertugas",
+    "query": "SELECT u.name, u.email, u.role, s.name AS toko FROM users u JOIN user_shops us ON u.id = us.user_id JOIN shops s ON us.shop_id = s.id ORDER BY s.name, u.role, u.name",
+    "difficulty": "simple",
+    "domain": "pengguna",
+    "edge_cases": [
+      "multi_shop_user"
+    ],
+    "tables_used": [
+      "users",
+      "user_shops",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_017",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transaksi walk-in (tanpa pelanggan terdaftar) di bulan April 2026",
+    "query": "SELECT invoice_no, subtotal, payment_method, paid_at FROM transactions WHERE customer_id IS NULL AND status = 'selesai' AND DATE_TRUNC('month', paid_at) = '2026-04-01' ORDER BY paid_at DESC",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "null_handling",
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions"
+    ],
+    "notes": "customer_id IS NULL berarti transaksi walk-in tanpa pelanggan terdaftar"
+  },
+  {
+    "id": "pos_018",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transfer yang ditolak beserta alasannya",
+    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, tf.note, tf.confirmed_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE tf.status = 'rejected' ORDER BY tf.confirmed_at",
+    "difficulty": "simple",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_019",
+    "db_id": "pos_backend",
+    "question": "Berapa total produk aktif saat ini?",
+    "query": "SELECT COUNT(*) AS total_produk_aktif FROM products WHERE is_active = TRUE",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "products"
+    ]
+  },
+  {
+    "id": "pos_020",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua varian produk dengan harga di atas 50.000 rupiah",
+    "query": "SELECT pv.sku, pv.name AS varian, pv.price, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.price > 50000 AND pv.is_active = TRUE ORDER BY pv.price DESC",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_021",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transaksi yang dibayar tunai di toko Cabang Depok",
+    "query": "SELECT t.invoice_no, t.subtotal, t.paid_at FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND t.payment_method = 'cash' AND t.status = 'selesai' ORDER BY t.paid_at DESC",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_022",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian produk dengan SKU IDM-GRG",
+    "query": "SELECT pv.sku, pv.name AS varian, pv.price, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.sku = 'IDM-GRG'",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [],
+    "tables_used": [
+      "product_variants",
+      "products"
+    ],
+    "notes": "SKU hanya ada di product_variants, bukan di products (kolom sku di products sudah dihapus)"
+  },
+  {
+    "id": "pos_023",
+    "db_id": "pos_backend",
+    "question": "Berapa jumlah kasir yang bertugas di toko Salamart Dalangan?",
+    "query": "SELECT COUNT(*) AS jumlah_kasir FROM users u JOIN user_shops us ON u.id = us.user_id JOIN shops s ON us.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND u.role = 'user'",
+    "difficulty": "simple",
+    "domain": "pengguna",
+    "edge_cases": [
+      "role_filter"
+    ],
+    "tables_used": [
+      "users",
+      "user_shops",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_024",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua pelanggan yang tidak memiliki nomor telepon",
+    "query": "SELECT id, name, email, address FROM customers WHERE phone IS NULL ORDER BY name",
+    "difficulty": "simple",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "null_handling"
+    ],
+    "tables_used": [
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_025",
+    "db_id": "pos_backend",
+    "question": "Berapa banyak transaksi yang dilakukan oleh kasir Rina Wulandari?",
+    "query": "SELECT COUNT(*) AS jumlah_transaksi FROM transactions t JOIN users u ON t.user_id = u.id WHERE u.name = 'Rina Wulandari' AND t.status = 'selesai'",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "users"
+    ]
+  },
+  {
+    "id": "pos_026",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua varian yang tidak aktif",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.is_active = FALSE ORDER BY p.name",
+    "difficulty": "simple",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_027",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua restock stok yang dilakukan di bulan Maret 2026",
+    "query": "SELECT s.name AS toko, pv.sku, sm.qty AS qty_restock, sm.cost_price, sm.created_at FROM stock_movements sm JOIN shops s ON sm.shop_id = s.id JOIN product_variants pv ON sm.product_variant_id = pv.id WHERE sm.type = 'restock' AND DATE_TRUNC('month', sm.created_at) = '2026-03-01' ORDER BY sm.created_at",
+    "difficulty": "simple",
+    "domain": "inventori",
+    "edge_cases": [
+      "type_filter"
+    ],
+    "tables_used": [
+      "stock_movements",
+      "shops",
+      "product_variants"
+    ]
+  },
+  {
+    "id": "pos_028",
+    "db_id": "pos_backend",
+    "question": "Berapa total refund yang masih berstatus pending?",
+    "query": "SELECT COUNT(*) AS total_pending, COALESCE(SUM(total_amount), 0) AS nilai_total FROM refunds WHERE status = 'pending'",
+    "difficulty": "simple",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "refunds"
+    ]
+  },
+  {
+    "id": "pos_029",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transaksi yang memiliki catatan (note tidak kosong) di bulan April 2026",
+    "query": "SELECT invoice_no, subtotal, note, paid_at FROM transactions WHERE note IS NOT NULL AND status = 'selesai' AND DATE_TRUNC('month', paid_at) = '2026-04-01' ORDER BY paid_at DESC",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "null_handling",
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_030",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua pengguna yang tidak terdaftar di toko manapun",
+    "query": "SELECT u.name, u.email, u.role FROM users u WHERE u.id NOT IN (SELECT user_id FROM user_shops) ORDER BY u.name",
+    "difficulty": "simple",
+    "domain": "pengguna",
+    "edge_cases": [
+      "multi_shop_user"
+    ],
+    "tables_used": [
+      "users",
+      "user_shops"
+    ],
+    "notes": "superAdmin biasanya tidak terdaftar di toko tertentu"
+  },
+  {
+    "id": "pos_031",
+    "db_id": "pos_backend",
+    "question": "Berapa total penjualan per toko di bulan Maret 2026?",
+    "query": "SELECT s.name AS toko, SUM(t.subtotal) AS total_penjualan, COUNT(t.id) AS jumlah_transaksi FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-03-01' GROUP BY s.id, s.name ORDER BY total_penjualan DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_032",
+    "db_id": "pos_backend",
+    "question": "Berapa total penjualan per toko di bulan April 2026?",
+    "query": "SELECT s.name AS toko, SUM(t.subtotal) AS total_penjualan, COUNT(t.id) AS jumlah_transaksi FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY s.id, s.name ORDER BY total_penjualan DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_033",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 10 varian produk terlaris berdasarkan total qty terjual di bulan Maret 2026",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, SUM(ti.qty) AS total_qty FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-03-01' GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY total_qty DESC LIMIT 10",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products"
+    ],
+    "notes": "transaction_items tidak punya timestamp, filter tanggal harus via JOIN ke transactions"
+  },
+  {
+    "id": "pos_034",
+    "db_id": "pos_backend",
+    "question": "Tampilkan total revenue yang dihasilkan setiap kasir di bulan April 2026",
+    "query": "SELECT u.name AS kasir, s.name AS toko, SUM(t.subtotal) AS total_revenue, COUNT(t.id) AS jumlah_transaksi FROM transactions t JOIN users u ON t.user_id = u.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND u.role = 'user' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY u.id, u.name, s.id, s.name ORDER BY total_revenue DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "role_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "users",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_035",
+    "db_id": "pos_backend",
+    "question": "Metode pembayaran apa yang paling sering digunakan selama periode Maret-April 2026?",
+    "query": "SELECT payment_method, COUNT(*) AS jumlah, SUM(subtotal) AS total_nilai FROM transactions WHERE status = 'selesai' GROUP BY payment_method ORDER BY jumlah DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_036",
+    "db_id": "pos_backend",
+    "question": "Tampilkan total penjualan per kategori produk di bulan April 2026",
+    "query": "SELECT c.name AS kategori, SUM(ti.subtotal) AS total_revenue, SUM(ti.qty) AS total_qty FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN categories c ON p.category_id = c.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY c.id, c.name ORDER BY total_revenue DESC",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_037",
+    "db_id": "pos_backend",
+    "question": "Berapa rata-rata nilai transaksi per toko selama dua bulan penuh?",
+    "query": "SELECT s.name AS toko, ROUND(AVG(t.subtotal), 2) AS rata_rata_transaksi, COUNT(t.id) AS total_transaksi FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY rata_rata_transaksi DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_038",
+    "db_id": "pos_backend",
+    "question": "Tampilkan stok tersedia (stok fisik dikurangi stok yang di-reserve) untuk setiap varian di toko Salamart Dalangan",
+    "query": "SELECT pv.sku, pv.name AS varian, inv.stock, inv.reserved_stock, (inv.stock - inv.reserved_stock) AS stok_tersedia, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' ORDER BY stok_tersedia ASC",
+    "difficulty": "medium",
+    "domain": "inventori",
+    "edge_cases": [
+      "available_stock"
+    ],
+    "tables_used": [
+      "inventory",
+      "product_variants",
+      "shops"
+    ],
+    "notes": "Stok tersedia = stock - reserved_stock, bukan stock saja"
+  },
+  {
+    "id": "pos_039",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian yang stoknya di bawah batas minimum di toko Cabang Depok",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, inv.stock, inv.reserved_stock, (inv.stock - inv.reserved_stock) AS stok_tersedia, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND (inv.stock - inv.reserved_stock) < inv.low_stock_threshold ORDER BY stok_tersedia ASC",
+    "difficulty": "medium",
+    "domain": "inventori",
+    "edge_cases": [
+      "available_stock",
+      "low_stock"
+    ],
+    "tables_used": [
+      "inventory",
+      "product_variants",
+      "products",
+      "shops"
+    ],
+    "notes": "Perbandingan harus menggunakan stok tersedia (stock - reserved_stock) bukan stock saja"
+  },
+  {
+    "id": "pos_040",
+    "db_id": "pos_backend",
+    "question": "Siapa 10 pelanggan dengan total nilai pembelian tertinggi selama dua bulan?",
+    "query": "SELECT c.name AS pelanggan, c.phone, SUM(t.subtotal) AS total_pembelian, COUNT(t.id) AS jumlah_transaksi FROM transactions t JOIN customers c ON t.customer_id = c.id WHERE t.status = 'selesai' GROUP BY c.id, c.name, c.phone ORDER BY total_pembelian DESC LIMIT 10",
+    "difficulty": "medium",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_041",
+    "db_id": "pos_backend",
+    "question": "Tampilkan jumlah transaksi dan total penjualan per hari di bulan Maret 2026 untuk toko Salamart Dalangan",
+    "query": "SELECT t.paid_at::date AS tanggal, COUNT(*) AS jumlah_transaksi, SUM(t.subtotal) AS total_penjualan FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-03-01' GROUP BY t.paid_at::date ORDER BY tanggal",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_042",
+    "db_id": "pos_backend",
+    "question": "Berapa total nilai refund yang telah disetujui per toko?",
+    "query": "SELECT s.name AS toko, SUM(r.total_amount) AS total_refund, COUNT(r.id) AS jumlah_refund FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN shops s ON t.shop_id = s.id WHERE r.status = 'approved' GROUP BY s.id, s.name ORDER BY total_refund DESC",
+    "difficulty": "medium",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "refunds",
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_043",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transfer yang disetujui beserta total qty barang yang ditransfer",
+    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, SUM(ti.qty) AS total_qty, tf.note, tf.confirmed_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id JOIN transfer_items ti ON tf.id = ti.transfer_id WHERE tf.status = 'approved' GROUP BY tf.id, fs.name, ts.name, tf.note, tf.confirmed_at ORDER BY tf.confirmed_at",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops",
+      "transfer_items"
+    ]
+  },
+  {
+    "id": "pos_044",
+    "db_id": "pos_backend",
+    "question": "Bandingkan total pendapatan bulan Maret vs April 2026 per toko dalam satu baris",
+    "query": "SELECT s.name AS toko, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) AS penjualan_maret, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) AS penjualan_april FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY s.name",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_045",
+    "db_id": "pos_backend",
+    "question": "Tampilkan jumlah transaksi per metode pembayaran untuk setiap toko",
+    "query": "SELECT s.name AS toko, t.payment_method, COUNT(*) AS jumlah FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name, t.payment_method ORDER BY s.name, jumlah DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_046",
+    "db_id": "pos_backend",
+    "question": "Siapa 5 pelanggan yang paling sering bertransaksi di bulan April 2026?",
+    "query": "SELECT c.name AS pelanggan, COUNT(t.id) AS jumlah_transaksi, SUM(t.subtotal) AS total_belanja FROM transactions t JOIN customers c ON t.customer_id = c.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY c.id, c.name ORDER BY jumlah_transaksi DESC LIMIT 5",
+    "difficulty": "medium",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_047",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian produk dengan total qty terjual tertinggi sepanjang periode Maret-April",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, SUM(ti.qty) AS total_qty_terjual, SUM(ti.subtotal) AS total_revenue FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id WHERE t.status = 'selesai' GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY total_qty_terjual DESC LIMIT 10",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_048",
+    "db_id": "pos_backend",
+    "question": "Berapa rata-rata jumlah jenis item (varian berbeda) per transaksi di setiap toko?",
+    "query": "SELECT s.name AS toko, ROUND(AVG(item_count), 2) AS rata_item_per_transaksi FROM (SELECT t.id, t.shop_id, COUNT(ti.id) AS item_count FROM transactions t JOIN transaction_items ti ON t.id = ti.transaction_id WHERE t.status = 'selesai' GROUP BY t.id, t.shop_id) sub JOIN shops s ON sub.shop_id = s.id GROUP BY s.id, s.name ORDER BY rata_item_per_transaksi DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "transaction_items",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_049",
+    "db_id": "pos_backend",
+    "question": "Kategori produk mana yang menghasilkan revenue tertinggi selama periode Maret-April?",
+    "query": "SELECT c.name AS kategori, SUM(ti.subtotal) AS total_revenue, SUM(ti.qty) AS total_qty FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN categories c ON p.category_id = c.id WHERE t.status = 'selesai' GROUP BY c.id, c.name ORDER BY total_revenue DESC",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_050",
+    "db_id": "pos_backend",
+    "question": "Toko mana yang paling banyak menerima transfer barang yang sudah disetujui?",
+    "query": "SELECT s.name AS toko, COUNT(DISTINCT tf.id) AS jumlah_transfer_masuk, SUM(ti.qty) AS total_qty_masuk FROM transfers tf JOIN shops s ON tf.to_shop_id = s.id JOIN transfer_items ti ON tf.id = ti.transfer_id WHERE tf.status = 'approved' GROUP BY s.id, s.name ORDER BY jumlah_transfer_masuk DESC",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops",
+      "transfer_items"
+    ]
+  },
+  {
+    "id": "pos_051",
+    "db_id": "pos_backend",
+    "question": "Toko mana yang paling banyak mengirim transfer barang?",
+    "query": "SELECT s.name AS toko, COUNT(DISTINCT tf.id) AS jumlah_transfer_keluar, SUM(ti.qty) AS total_qty_keluar FROM transfers tf JOIN shops s ON tf.from_shop_id = s.id JOIN transfer_items ti ON tf.id = ti.transfer_id WHERE tf.status = 'approved' GROUP BY s.id, s.name ORDER BY jumlah_transfer_keluar DESC",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops",
+      "transfer_items"
+    ]
+  },
+  {
+    "id": "pos_052",
+    "db_id": "pos_backend",
+    "question": "Berapa nilai total stok saat ini (stok × avg_cost_price) per toko?",
+    "query": "SELECT s.name AS toko, SUM(inv.stock * inv.avg_cost_price) AS nilai_stok FROM inventory inv JOIN shops s ON inv.shop_id = s.id GROUP BY s.id, s.name ORDER BY nilai_stok DESC",
+    "difficulty": "medium",
+    "domain": "inventori",
+    "edge_cases": [],
+    "tables_used": [
+      "inventory",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_053",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian produk yang belum pernah di-refund",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.id NOT IN (SELECT DISTINCT ti.product_variant_id FROM refund_items ri JOIN transaction_items ti ON ri.transaction_item_id = ti.id) ORDER BY p.name, pv.name",
+    "difficulty": "medium",
+    "domain": "refund",
+    "edge_cases": [
+      "not_in_subquery"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products",
+      "refund_items",
+      "transaction_items"
+    ]
+  },
+  {
+    "id": "pos_054",
+    "db_id": "pos_backend",
+    "question": "Kasir mana yang memiliki jumlah transaksi terbanyak selama dua bulan?",
+    "query": "SELECT u.name AS kasir, s.name AS toko, COUNT(t.id) AS jumlah_transaksi, SUM(t.subtotal) AS total_penjualan FROM transactions t JOIN users u ON t.user_id = u.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND u.role = 'user' GROUP BY u.id, u.name, s.id, s.name ORDER BY jumlah_transaksi DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "role_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "users",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_055",
+    "db_id": "pos_backend",
+    "question": "Berapa total qty yang ditransfer per varian selama periode Maret-April pada transfer yang disetujui?",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, SUM(ti.qty) AS total_qty_transfer FROM transfer_items ti JOIN transfers tf ON ti.transfer_id = tf.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id WHERE tf.status = 'approved' GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY total_qty_transfer DESC",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transfer_items",
+      "transfers",
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_056",
+    "db_id": "pos_backend",
+    "question": "Berapa persentase transaksi walk-in dibandingkan total transaksi?",
+    "query": "SELECT COUNT(CASE WHEN customer_id IS NULL THEN 1 END) AS walk_in, COUNT(CASE WHEN customer_id IS NOT NULL THEN 1 END) AS dengan_pelanggan, COUNT(*) AS total, ROUND(100.0 * COUNT(CASE WHEN customer_id IS NULL THEN 1 END) / COUNT(*), 2) AS pct_walk_in FROM transactions WHERE status = 'selesai'",
+    "difficulty": "medium",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "null_handling",
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions"
+    ],
+    "notes": "customer_id IS NULL berarti walk-in"
+  },
+  {
+    "id": "pos_057",
+    "db_id": "pos_backend",
+    "question": "Hari apa dengan total penjualan tertinggi di bulan April 2026?",
+    "query": "SELECT paid_at::date AS tanggal, SUM(subtotal) AS total_penjualan, COUNT(*) AS jumlah_transaksi FROM transactions WHERE status = 'selesai' AND DATE_TRUNC('month', paid_at) = '2026-04-01' GROUP BY paid_at::date ORDER BY total_penjualan DESC LIMIT 5",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_058",
+    "db_id": "pos_backend",
+    "question": "Berapa rata-rata nilai refund per toko untuk refund yang sudah disetujui?",
+    "query": "SELECT s.name AS toko, ROUND(AVG(r.total_amount), 2) AS rata_nilai_refund, COUNT(r.id) AS jumlah_refund FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN shops s ON t.shop_id = s.id WHERE r.status = 'approved' GROUP BY s.id, s.name ORDER BY rata_nilai_refund DESC",
+    "difficulty": "medium",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "refunds",
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_059",
+    "db_id": "pos_backend",
+    "question": "Tampilkan total penjualan per minggu di bulan Maret 2026",
+    "query": "SELECT DATE_TRUNC('week', paid_at) AS minggu, SUM(subtotal) AS total_penjualan, COUNT(*) AS jumlah_transaksi FROM transactions WHERE status = 'selesai' AND DATE_TRUNC('month', paid_at) = '2026-03-01' GROUP BY DATE_TRUNC('week', paid_at) ORDER BY minggu",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_060",
+    "db_id": "pos_backend",
+    "question": "Tampilkan gross profit (revenue dikurangi COGS) per toko selama dua bulan",
+    "query": "SELECT s.name AS toko, SUM(ti.subtotal) AS total_revenue, SUM(ti.cost_price * ti.qty) AS total_cogs, SUM(ti.subtotal) - SUM(ti.cost_price * ti.qty) AS gross_profit FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY gross_profit DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "snapshot_price"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "shops"
+    ],
+    "notes": "cost_price di transaction_items adalah snapshot harga beli saat transaksi"
+  },
+  {
+    "id": "pos_061",
+    "db_id": "pos_backend",
+    "question": "Tampilkan pelanggan yang melakukan transaksi lebih dari 15 kali selama periode Maret-April",
+    "query": "SELECT c.name AS pelanggan, c.phone, COUNT(t.id) AS jumlah_transaksi, SUM(t.subtotal) AS total_belanja FROM transactions t JOIN customers c ON t.customer_id = c.id WHERE t.status = 'selesai' GROUP BY c.id, c.name, c.phone HAVING COUNT(t.id) > 15 ORDER BY jumlah_transaksi DESC",
+    "difficulty": "medium",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "status_filter",
+      "having"
+    ],
+    "tables_used": [
+      "transactions",
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_062",
+    "db_id": "pos_backend",
+    "question": "Toko mana yang memiliki rata-rata nilai transaksi tertinggi di bulan April 2026?",
+    "query": "SELECT s.name AS toko, ROUND(AVG(t.subtotal), 2) AS rata_transaksi FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY s.id, s.name ORDER BY rata_transaksi DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_063",
+    "db_id": "pos_backend",
+    "question": "Varian produk mana yang paling sering muncul dalam refund berdasarkan total qty yang di-refund?",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, SUM(ri.qty) AS total_qty_refund FROM refund_items ri JOIN transaction_items ti ON ri.transaction_item_id = ti.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY total_qty_refund DESC",
+    "difficulty": "medium",
+    "domain": "refund",
+    "edge_cases": [],
+    "tables_used": [
+      "refund_items",
+      "transaction_items",
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_064",
+    "db_id": "pos_backend",
+    "question": "Berapa total COGS (cost of goods sold) per toko di bulan April 2026?",
+    "query": "SELECT s.name AS toko, SUM(ti.cost_price * ti.qty) AS total_cogs FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY s.id, s.name ORDER BY total_cogs DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "snapshot_price"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_065",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian produk dengan harga jual tertinggi di setiap kategori",
+    "query": "SELECT c.name AS kategori, pv.sku, pv.name AS varian, pv.price FROM product_variants pv JOIN products p ON pv.product_id = p.id JOIN categories c ON p.category_id = c.id WHERE pv.price = (SELECT MAX(pv2.price) FROM product_variants pv2 JOIN products p2 ON pv2.product_id = p2.id WHERE p2.category_id = p.category_id AND pv2.is_active = TRUE) AND pv.is_active = TRUE ORDER BY pv.price DESC",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "soft_delete",
+      "correlated_subquery"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_066",
+    "db_id": "pos_backend",
+    "question": "Tampilkan distribusi jumlah transaksi per jam dalam sehari (UTC)",
+    "query": "SELECT EXTRACT(HOUR FROM paid_at) AS jam, COUNT(*) AS jumlah_transaksi FROM transactions WHERE status = 'selesai' GROUP BY EXTRACT(HOUR FROM paid_at) ORDER BY jam",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_067",
+    "db_id": "pos_backend",
+    "question": "Tampilkan pelanggan yang pernah bertransaksi di lebih dari satu toko",
+    "query": "SELECT c.name AS pelanggan, COUNT(DISTINCT t.shop_id) AS jumlah_toko, STRING_AGG(DISTINCT s.name, ', ') AS daftar_toko FROM transactions t JOIN customers c ON t.customer_id = c.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY c.id, c.name HAVING COUNT(DISTINCT t.shop_id) > 1 ORDER BY jumlah_toko DESC",
+    "difficulty": "medium",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "multi_shop_user",
+      "status_filter",
+      "having"
+    ],
+    "tables_used": [
+      "transactions",
+      "customers",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_068",
+    "db_id": "pos_backend",
+    "question": "Berapa total nilai penjualan masing-masing kasir di toko Salamart Dalangan selama dua bulan?",
+    "query": "SELECT u.name AS kasir, SUM(t.subtotal) AS total_penjualan, COUNT(t.id) AS jumlah_transaksi FROM transactions t JOIN users u ON t.user_id = u.id JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND u.role = 'user' AND t.status = 'selesai' GROUP BY u.id, u.name ORDER BY total_penjualan DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "role_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "users",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_069",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transfer yang melibatkan toko Cabang Bekasi baik sebagai pengirim maupun penerima",
+    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, tf.status, tf.note, tf.created_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE fs.name = 'Salamart Pengasih' OR ts.name = 'Salamart Pengasih' ORDER BY tf.created_at",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "self_join",
+      "or_condition"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_070",
+    "db_id": "pos_backend",
+    "question": "Berapa jumlah varian produk yang tersedia (stok > 0) di toko Cabang Bekasi?",
+    "query": "SELECT COUNT(DISTINCT inv.product_variant_id) AS jumlah_varian FROM inventory inv JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Pengasih' AND inv.stock > 0",
+    "difficulty": "medium",
+    "domain": "inventori",
+    "edge_cases": [
+      "zero_stock"
+    ],
+    "tables_used": [
+      "inventory",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_071",
+    "db_id": "pos_backend",
+    "question": "Varian produk mana yang tidak pernah terjual sama sekali selama periode Maret-April 2026?",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.id NOT IN (SELECT DISTINCT ti.product_variant_id FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id WHERE t.status = 'selesai') AND pv.is_active = TRUE ORDER BY p.name, pv.name",
+    "difficulty": "hard",
+    "domain": "produk",
+    "edge_cases": [
+      "not_in_subquery",
+      "status_filter",
+      "soft_delete"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products",
+      "transaction_items",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_072",
+    "db_id": "pos_backend",
+    "question": "Berdasarkan rata-rata penjualan harian di bulan April, varian mana yang stoknya diperkirakan habis dalam 7 hari ke depan?",
+    "query": "SELECT pv.sku, pv.name AS varian, s.name AS toko, inv.stock AS stok_saat_ini, ROUND(avg_daily.avg_qty, 2) AS rata_terjual_per_hari, ROUND(inv.stock::numeric / NULLIF(avg_daily.avg_qty, 0), 1) AS estimasi_hari_habis FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN shops s ON inv.shop_id = s.id JOIN (SELECT sm.shop_id, sm.product_variant_id, SUM(ABS(sm.qty))::numeric / 30 AS avg_qty FROM stock_movements sm WHERE sm.type = 'sale' AND sm.created_at >= '2026-04-01' GROUP BY sm.shop_id, sm.product_variant_id) avg_daily ON inv.shop_id = avg_daily.shop_id AND inv.product_variant_id = avg_daily.product_variant_id WHERE inv.stock / NULLIF(avg_daily.avg_qty, 0) < 7 ORDER BY estimasi_hari_habis ASC",
+    "difficulty": "hard",
+    "domain": "inventori",
+    "edge_cases": [
+      "null_handling",
+      "type_filter"
+    ],
+    "tables_used": [
+      "inventory",
+      "product_variants",
+      "shops",
+      "stock_movements"
+    ]
+  },
+  {
+    "id": "pos_073",
+    "db_id": "pos_backend",
+    "question": "Pelanggan mana yang bertransaksi di bulan Maret tapi tidak bertransaksi di bulan April?",
+    "query": "SELECT c.name AS pelanggan, c.phone FROM customers c WHERE c.id IN (SELECT DISTINCT t.customer_id FROM transactions t WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-03-01' AND t.customer_id IS NOT NULL) AND c.id NOT IN (SELECT DISTINCT t.customer_id FROM transactions t WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' AND t.customer_id IS NOT NULL) ORDER BY c.name",
+    "difficulty": "hard",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "not_in_subquery",
+      "null_handling",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "customers",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_074",
+    "db_id": "pos_backend",
+    "question": "Toko mana yang mengalami pertumbuhan penjualan tertinggi dari bulan Maret ke April?",
+    "query": "SELECT s.name AS toko, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) AS penjualan_maret, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) AS penjualan_april, ROUND(100.0 * (SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) - SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END)) / NULLIF(SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END), 0), 2) AS pertumbuhan_pct FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY pertumbuhan_pct DESC",
+    "difficulty": "hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation",
+      "null_handling"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_075",
+    "db_id": "pos_backend",
+    "question": "Varian produk mana yang ada di inventory toko Pusat tapi tidak tersedia di toko Bekasi?",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.id IN (SELECT inv.product_variant_id FROM inventory inv JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND inv.stock > 0) AND pv.id NOT IN (SELECT inv.product_variant_id FROM inventory inv JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Pengasih') ORDER BY p.name, pv.name",
+    "difficulty": "hard",
+    "domain": "inventori",
+    "edge_cases": [
+      "not_in_subquery",
+      "zero_stock"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products",
+      "inventory",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_076",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 5 transaksi dengan jumlah jenis varian item terbanyak",
+    "query": "SELECT t.invoice_no, s.name AS toko, COUNT(ti.id) AS jumlah_jenis_varian, SUM(ti.qty) AS total_qty, t.subtotal, t.paid_at FROM transactions t JOIN transaction_items ti ON t.id = ti.transaction_id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY t.id, t.invoice_no, s.name, t.subtotal, t.paid_at ORDER BY jumlah_jenis_varian DESC LIMIT 5",
+    "difficulty": "hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "transaction_items",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_077",
+    "db_id": "pos_backend",
+    "question": "Tampilkan produk mana yang dijual di semua toko dan mana yang hanya di sebagian toko",
+    "query": "SELECT p.name AS produk, COUNT(DISTINCT t.shop_id) AS jumlah_toko_jual, CASE WHEN COUNT(DISTINCT t.shop_id) = 3 THEN 'Semua Toko' ELSE 'Sebagian Toko' END AS status_distribusi FROM products p JOIN product_variants pv ON p.id = pv.product_id JOIN transaction_items ti ON pv.id = ti.product_variant_id JOIN transactions t ON ti.transaction_id = t.id WHERE t.status = 'selesai' GROUP BY p.id, p.name ORDER BY jumlah_toko_jual DESC, p.name",
+    "difficulty": "hard",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "products",
+      "product_variants",
+      "transaction_items",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_078",
+    "db_id": "pos_backend",
+    "question": "Tampilkan refund yang nilainya lebih dari 50% dari nilai transaksi aslinya",
+    "query": "SELECT r.id AS refund_id, t.invoice_no, t.subtotal AS nilai_transaksi, r.total_amount AS nilai_refund, ROUND(100.0 * r.total_amount / t.subtotal, 2) AS pct_refund FROM refunds r JOIN transactions t ON r.transaction_id = t.id WHERE r.status = 'approved' AND r.total_amount > 0.5 * t.subtotal ORDER BY pct_refund DESC",
+    "difficulty": "hard",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter",
+      "partial_refund"
+    ],
+    "tables_used": [
+      "refunds",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_079",
+    "db_id": "pos_backend",
+    "question": "Kasir mana yang rata-rata nilai transaksinya di atas rata-rata keseluruhan semua kasir?",
+    "query": "SELECT u.name AS kasir, s.name AS toko, ROUND(AVG(t.subtotal), 2) AS rata_transaksi FROM transactions t JOIN users u ON t.user_id = u.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND u.role = 'user' GROUP BY u.id, u.name, s.id, s.name HAVING AVG(t.subtotal) > (SELECT AVG(subtotal) FROM transactions WHERE status = 'selesai') ORDER BY rata_transaksi DESC",
+    "difficulty": "hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "role_filter",
+      "correlated_subquery",
+      "having"
+    ],
+    "tables_used": [
+      "transactions",
+      "users",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_080",
+    "db_id": "pos_backend",
+    "question": "Pelanggan mana yang total belanjanya turun dari bulan Maret ke April?",
+    "query": "SELECT c.name AS pelanggan, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) AS belanja_maret, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) AS belanja_april FROM customers c JOIN transactions t ON c.id = t.customer_id WHERE t.status = 'selesai' GROUP BY c.id, c.name HAVING SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) > 0 AND SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) < SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) ORDER BY (SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) - SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END)) DESC",
+    "difficulty": "hard",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "date_truncation",
+      "having"
+    ],
+    "tables_used": [
+      "customers",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_081",
+    "db_id": "pos_backend",
+    "question": "Varian produk mana yang pernah ditransfer tapi tidak pernah terjual?",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.id IN (SELECT DISTINCT ti.product_variant_id FROM transfer_items ti JOIN transfers tf ON ti.transfer_id = tf.id WHERE tf.status = 'approved') AND pv.id NOT IN (SELECT DISTINCT ti.product_variant_id FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id WHERE t.status = 'selesai') ORDER BY p.name",
+    "difficulty": "hard",
+    "domain": "transfer",
+    "edge_cases": [
+      "not_in_subquery",
+      "status_filter"
+    ],
+    "tables_used": [
+      "product_variants",
+      "products",
+      "transfer_items",
+      "transfers",
+      "transaction_items",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_082",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 10 varian dengan total pergerakan stok (jumlah movement) terbanyak",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, COUNT(sm.id) AS jumlah_movement, SUM(ABS(sm.qty)) AS total_qty_bergerak FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY jumlah_movement DESC LIMIT 10",
+    "difficulty": "hard",
+    "domain": "audit",
+    "edge_cases": [],
+    "tables_used": [
+      "stock_movements",
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_083",
+    "db_id": "pos_backend",
+    "question": "Tampilkan toko dengan rasio nilai refund tertinggi dibanding total penjualannya",
+    "query": "SELECT s.name AS toko, SUM(t.subtotal) AS total_penjualan, COALESCE(SUM(r.total_amount), 0) AS total_refund, ROUND(100.0 * COALESCE(SUM(r.total_amount), 0) / NULLIF(SUM(t.subtotal), 0), 4) AS rasio_refund_pct FROM transactions t JOIN shops s ON t.shop_id = s.id LEFT JOIN refunds r ON t.id = r.transaction_id AND r.status = 'approved' WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY rasio_refund_pct DESC",
+    "difficulty": "hard",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter",
+      "null_handling",
+      "left_join"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops",
+      "refunds"
+    ]
+  },
+  {
+    "id": "pos_084",
+    "db_id": "pos_backend",
+    "question": "Perbandingan total penjualan hari kerja (Senin-Jumat) vs akhir pekan per toko",
+    "query": "SELECT s.name AS toko, SUM(CASE WHEN EXTRACT(DOW FROM t.paid_at) BETWEEN 1 AND 5 THEN t.subtotal ELSE 0 END) AS penjualan_weekday, SUM(CASE WHEN EXTRACT(DOW FROM t.paid_at) IN (0, 6) THEN t.subtotal ELSE 0 END) AS penjualan_weekend FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY s.name",
+    "difficulty": "hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_085",
+    "db_id": "pos_backend",
+    "question": "Varian mana yang pernah mencapai stok 0 berdasarkan catatan stock_movements?",
+    "query": "SELECT DISTINCT pv.sku, pv.name AS varian, p.name AS produk, s.name AS toko FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON sm.shop_id = s.id WHERE sm.stock_after = 0 ORDER BY s.name, pv.sku",
+    "difficulty": "hard",
+    "domain": "inventori",
+    "edge_cases": [
+      "zero_stock"
+    ],
+    "tables_used": [
+      "stock_movements",
+      "product_variants",
+      "products",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_086",
+    "db_id": "pos_backend",
+    "question": "Admin mana yang paling banyak menyetujui transfer?",
+    "query": "SELECT u.name AS admin, COUNT(*) AS jumlah_disetujui FROM transfers tf JOIN users u ON tf.confirmed_by = u.id WHERE tf.status = 'approved' GROUP BY u.id, u.name ORDER BY jumlah_disetujui DESC",
+    "difficulty": "hard",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "null_handling"
+    ],
+    "tables_used": [
+      "transfers",
+      "users"
+    ],
+    "notes": "confirmed_by nullable pada transfer pending, hanya ada pada approved/rejected"
+  },
+  {
+    "id": "pos_087",
+    "db_id": "pos_backend",
+    "question": "Kasir mana yang tidak memiliki transaksi sama sekali di bulan April 2026?",
+    "query": "SELECT u.name AS kasir, s.name AS toko FROM users u JOIN user_shops us ON u.id = us.user_id JOIN shops s ON us.shop_id = s.id WHERE u.role = 'user' AND u.id NOT IN (SELECT DISTINCT t.user_id FROM transactions t WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01') ORDER BY s.name, u.name",
+    "difficulty": "hard",
+    "domain": "pengguna",
+    "edge_cases": [
+      "not_in_subquery",
+      "role_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "users",
+      "user_shops",
+      "shops",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_088",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 5 hari dengan selisih penjualan terbesar antara toko Pusat dan toko Depok",
+    "query": "SELECT tanggal, pusat, depok, ABS(pusat - depok) AS selisih FROM (SELECT paid_at::date AS tanggal, SUM(CASE WHEN s.name = 'Salamart Dalangan' THEN t.subtotal ELSE 0 END) AS pusat, SUM(CASE WHEN s.name = 'Salamart Cikli' THEN t.subtotal ELSE 0 END) AS depok FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY paid_at::date) sub ORDER BY selisih DESC LIMIT 5",
+    "difficulty": "hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_089",
+    "db_id": "pos_backend",
+    "question": "Tampilkan pelanggan yang pernah bertransaksi di ketiga toko sekaligus",
+    "query": "SELECT c.name AS pelanggan, c.phone FROM customers c JOIN transactions t ON c.id = t.customer_id WHERE t.status = 'selesai' GROUP BY c.id, c.name, c.phone HAVING COUNT(DISTINCT t.shop_id) = 3",
+    "difficulty": "hard",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "multi_shop_user",
+      "status_filter",
+      "having"
+    ],
+    "tables_used": [
+      "customers",
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_090",
+    "db_id": "pos_backend",
+    "question": "Siapa yang melakukan restock terakhir untuk setiap varian di toko Salamart Dalangan?",
+    "query": "SELECT pv.sku, pv.name AS varian, u.name AS direstock_oleh, sm.qty AS qty_restock, sm.created_at FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN users u ON sm.user_id = u.id JOIN shops s ON sm.shop_id = s.id WHERE sm.type = 'restock' AND s.name = 'Salamart Dalangan' AND sm.created_at = (SELECT MAX(sm2.created_at) FROM stock_movements sm2 WHERE sm2.product_variant_id = sm.product_variant_id AND sm2.shop_id = sm.shop_id AND sm2.type = 'restock') ORDER BY pv.sku",
+    "difficulty": "hard",
+    "domain": "audit",
+    "edge_cases": [
+      "correlated_subquery",
+      "type_filter"
+    ],
+    "tables_used": [
+      "stock_movements",
+      "product_variants",
+      "users",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_091",
+    "db_id": "pos_backend",
+    "question": "Hitung ranking varian berdasarkan total revenue menggunakan RANK() per kategori",
+    "query": "SELECT c.name AS kategori, pv.sku, pv.name AS varian, SUM(ti.subtotal) AS total_revenue, RANK() OVER (PARTITION BY c.id ORDER BY SUM(ti.subtotal) DESC) AS ranking FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN categories c ON p.category_id = c.id WHERE t.status = 'selesai' GROUP BY c.id, c.name, pv.id, pv.sku, pv.name ORDER BY c.name, ranking",
+    "difficulty": "extra_hard",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "window_function"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_092",
+    "db_id": "pos_backend",
+    "question": "Hitung running total penjualan kumulatif per toko dari hari ke hari",
+    "query": "SELECT s.name AS toko, t_date, daily_sales, SUM(daily_sales) OVER (PARTITION BY shop_id ORDER BY t_date) AS penjualan_kumulatif FROM (SELECT t.shop_id, t.paid_at::date AS t_date, SUM(t.subtotal) AS daily_sales FROM transactions t WHERE t.status = 'selesai' GROUP BY t.shop_id, t.paid_at::date) sub JOIN shops s ON sub.shop_id = s.id ORDER BY s.name, t_date",
+    "difficulty": "extra_hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "window_function"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_093",
+    "db_id": "pos_backend",
+    "question": "Hari-hari mana di mana penjualan toko Pusat melebihi dua kali rata-rata harian toko Pusat?",
+    "query": "WITH daily AS (SELECT paid_at::date AS t_date, SUM(subtotal) AS daily_total FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND t.status = 'selesai' GROUP BY paid_at::date), avg_daily AS (SELECT AVG(daily_total) AS avg_total FROM daily) SELECT d.t_date, d.daily_total, ROUND(a.avg_total, 2) AS rata_rata_harian FROM daily d, avg_daily a WHERE d.daily_total > 2 * a.avg_total ORDER BY d.daily_total DESC",
+    "difficulty": "extra_hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "cte",
+      "window_function"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_094",
+    "db_id": "pos_backend",
+    "question": "Tampilkan top 3 varian terlaris per toko menggunakan ROW_NUMBER()",
+    "query": "WITH ranked AS (SELECT s.name AS toko, pv.sku, pv.name AS varian, SUM(ti.qty) AS total_qty, ROW_NUMBER() OVER (PARTITION BY t.shop_id ORDER BY SUM(ti.qty) DESC) AS rn FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY t.shop_id, s.name, pv.id, pv.sku, pv.name) SELECT toko, sku, varian, total_qty FROM ranked WHERE rn <= 3 ORDER BY toko, rn",
+    "difficulty": "extra_hard",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "window_function",
+      "cte"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_095",
+    "db_id": "pos_backend",
+    "question": "Hitung persentase kontribusi revenue setiap varian terhadap total revenue toko-nya menggunakan window function",
+    "query": "SELECT s.name AS toko, pv.sku, pv.name AS varian, SUM(ti.subtotal) AS revenue_varian, SUM(SUM(ti.subtotal)) OVER (PARTITION BY t.shop_id) AS total_revenue_toko, ROUND(100.0 * SUM(ti.subtotal) / SUM(SUM(ti.subtotal)) OVER (PARTITION BY t.shop_id), 2) AS pct_kontribusi FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY t.shop_id, s.name, pv.id, pv.sku, pv.name ORDER BY s.name, pct_kontribusi DESC",
+    "difficulty": "extra_hard",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "window_function"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_096",
+    "db_id": "pos_backend",
+    "question": "Revenue per kategori sebagai persentase dari total revenue keseluruhan menggunakan window function",
+    "query": "SELECT c.name AS kategori, SUM(ti.subtotal) AS revenue, SUM(SUM(ti.subtotal)) OVER () AS total_revenue, ROUND(100.0 * SUM(ti.subtotal) / SUM(SUM(ti.subtotal)) OVER (), 2) AS pct_dari_total FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN categories c ON p.category_id = c.id WHERE t.status = 'selesai' GROUP BY c.id, c.name ORDER BY pct_dari_total DESC",
+    "difficulty": "extra_hard",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "window_function"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products",
+      "categories"
+    ]
+  },
+  {
+    "id": "pos_097",
+    "db_id": "pos_backend",
+    "question": "Hitung volatilitas penjualan harian (standar deviasi qty per hari) untuk setiap varian di setiap toko",
+    "query": "SELECT s.name AS toko, pv.sku, pv.name AS varian, ROUND(AVG(daily_qty), 2) AS rata_harian, ROUND(STDDEV(daily_qty)::numeric, 2) AS stddev_qty, COUNT(*) AS hari_ada_penjualan FROM (SELECT sm.shop_id, sm.product_variant_id, sm.created_at::date AS t_date, SUM(ABS(sm.qty)) AS daily_qty FROM stock_movements sm WHERE sm.type = 'sale' GROUP BY sm.shop_id, sm.product_variant_id, sm.created_at::date) sub JOIN shops s ON sub.shop_id = s.id JOIN product_variants pv ON sub.product_variant_id = pv.id GROUP BY s.id, s.name, pv.id, pv.sku, pv.name HAVING COUNT(*) >= 10 ORDER BY stddev_qty DESC LIMIT 15",
+    "difficulty": "extra_hard",
+    "domain": "produk",
+    "edge_cases": [
+      "type_filter",
+      "having"
+    ],
+    "tables_used": [
+      "stock_movements",
+      "shops",
+      "product_variants"
+    ]
+  },
+  {
+    "id": "pos_098",
+    "db_id": "pos_backend",
+    "question": "Tampilkan tren penjualan mingguan dengan perubahan persentase minggu ke minggu per toko",
+    "query": "WITH weekly AS (SELECT DATE_TRUNC('week', t.paid_at) AS minggu, t.shop_id, SUM(t.subtotal) AS total_minggu FROM transactions t WHERE t.status = 'selesai' GROUP BY DATE_TRUNC('week', t.paid_at), t.shop_id) SELECT s.name AS toko, minggu, total_minggu, LAG(total_minggu) OVER (PARTITION BY shop_id ORDER BY minggu) AS minggu_sebelumnya, ROUND(100.0 * (total_minggu - LAG(total_minggu) OVER (PARTITION BY shop_id ORDER BY minggu)) / NULLIF(LAG(total_minggu) OVER (PARTITION BY shop_id ORDER BY minggu), 0), 2) AS pertumbuhan_pct FROM weekly JOIN shops s ON weekly.shop_id = s.id ORDER BY s.name, minggu",
+    "difficulty": "extra_hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "window_function",
+      "cte",
+      "null_handling"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_099",
+    "db_id": "pos_backend",
+    "question": "Analisis cohort: berapa pelanggan baru yang pertama kali bertransaksi di Maret vs April?",
+    "query": "WITH first_tx AS (SELECT customer_id, MIN(DATE_TRUNC('month', paid_at)) AS first_month FROM transactions WHERE status = 'selesai' AND customer_id IS NOT NULL GROUP BY customer_id) SELECT first_month, COUNT(*) AS pelanggan_baru FROM first_tx GROUP BY first_month ORDER BY first_month",
+    "difficulty": "extra_hard",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "null_handling",
+      "date_truncation",
+      "cte"
+    ],
+    "tables_used": [
+      "transactions"
+    ]
+  },
+  {
+    "id": "pos_100",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 5 transaksi bernilai tertinggi di masing-masing toko menggunakan ROW_NUMBER()",
+    "query": "WITH ranked AS (SELECT t.invoice_no, s.name AS toko, t.subtotal, t.paid_at, ROW_NUMBER() OVER (PARTITION BY t.shop_id ORDER BY t.subtotal DESC) AS rn FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai') SELECT toko, invoice_no, subtotal, paid_at FROM ranked WHERE rn <= 5 ORDER BY toko, subtotal DESC",
+    "difficulty": "extra_hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "window_function",
+      "cte"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_101",
+    "db_id": "pos_backend",
+    "question": "Produk apa yang paling sering dibeli bersama Indomie Goreng dalam satu transaksi?",
+    "query": "SELECT pv2.sku, pv2.name AS varian_bersama, p2.name AS produk, COUNT(*) AS frekuensi FROM transaction_items ti1 JOIN transaction_items ti2 ON ti1.transaction_id = ti2.transaction_id AND ti1.product_variant_id != ti2.product_variant_id JOIN product_variants pv1 ON ti1.product_variant_id = pv1.id JOIN product_variants pv2 ON ti2.product_variant_id = pv2.id JOIN products p2 ON pv2.product_id = p2.id WHERE pv1.sku = 'IDM-GRG' GROUP BY pv2.id, pv2.sku, pv2.name, p2.name ORDER BY frekuensi DESC LIMIT 10",
+    "difficulty": "extra_hard",
+    "domain": "produk",
+    "edge_cases": [
+      "self_join"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "product_variants",
+      "products"
+    ]
+  },
+  {
+    "id": "pos_102",
+    "db_id": "pos_backend",
+    "question": "Tampilkan perubahan stok harian (net change) per varian di toko Pusat selama bulan April",
+    "query": "SELECT sm.created_at::date AS tanggal, pv.sku, pv.name AS varian, SUM(sm.qty) AS net_change_stok FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN shops s ON sm.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND sm.created_at >= '2026-04-01' AND sm.created_at < '2026-05-01' GROUP BY sm.created_at::date, pv.id, pv.sku, pv.name ORDER BY tanggal, pv.sku",
+    "difficulty": "extra_hard",
+    "domain": "audit",
+    "edge_cases": [],
+    "tables_used": [
+      "stock_movements",
+      "product_variants",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_103",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua stock_movements untuk varian AQU-600 di semua toko secara kronologis",
+    "query": "SELECT sm.created_at, s.name AS toko, sm.type, sm.qty, sm.stock_before, sm.stock_after, sm.note FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN shops s ON sm.shop_id = s.id WHERE pv.sku = 'AQU-600' ORDER BY sm.created_at, s.name",
+    "difficulty": "medium",
+    "domain": "audit",
+    "edge_cases": [],
+    "tables_used": [
+      "stock_movements",
+      "product_variants",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_104",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian yang avg_cost_price di inventory lebih tinggi dari harga jualnya (margin negatif)",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, s.name AS toko, pv.price AS harga_jual, inv.avg_cost_price AS avg_cost, (pv.price - inv.avg_cost_price) AS margin FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON inv.shop_id = s.id WHERE pv.price < inv.avg_cost_price ORDER BY margin ASC",
+    "difficulty": "hard",
+    "domain": "inventori",
+    "edge_cases": [
+      "snapshot_price"
+    ],
+    "tables_used": [
+      "inventory",
+      "product_variants",
+      "products",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_105",
+    "db_id": "pos_backend",
+    "question": "Tampilkan pelanggan yang memiliki lebih dari satu refund yang disetujui",
+    "query": "SELECT c.name AS pelanggan, c.phone, COUNT(DISTINCT r.id) AS jumlah_refund, SUM(r.total_amount) AS total_nilai_refund FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN customers c ON t.customer_id = c.id WHERE r.status = 'approved' GROUP BY c.id, c.name, c.phone HAVING COUNT(DISTINCT r.id) > 1 ORDER BY jumlah_refund DESC",
+    "difficulty": "hard",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter",
+      "having"
+    ],
+    "tables_used": [
+      "refunds",
+      "transactions",
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_106",
+    "db_id": "pos_backend",
+    "question": "Perbandingan jumlah transaksi Tunai vs QRIS per toko selama periode Maret-April 2026",
+    "query": "SELECT s.name AS toko, t.payment_method, COUNT(*) AS jumlah_transaksi, SUM(t.subtotal) AS total_nilai FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name, t.payment_method ORDER BY s.name, jumlah_transaksi DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_107",
+    "db_id": "pos_backend",
+    "question": "Berapa estimasi nilai total transfer yang masih pending berdasarkan harga varian saat ini?",
+    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, SUM(pv.price * ti.qty) AS estimasi_nilai, tf.created_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id JOIN transfer_items ti ON tf.id = ti.transfer_id JOIN product_variants pv ON ti.product_variant_id = pv.id WHERE tf.status = 'pending' GROUP BY tf.id, fs.name, ts.name, tf.created_at",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops",
+      "transfer_items",
+      "product_variants"
+    ]
+  },
+  {
+    "id": "pos_108",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua item dari transfer yang disetujui beserta detail varian dan estimasi nilainya",
+    "query": "SELECT tf.id AS transfer_id, fs.name AS dari_toko, ts.name AS ke_toko, pv.sku, pv.name AS varian, ti.qty, pv.price, (ti.qty * pv.price) AS estimasi_nilai, tf.confirmed_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id JOIN transfer_items ti ON tf.id = ti.transfer_id JOIN product_variants pv ON ti.product_variant_id = pv.id WHERE tf.status = 'approved' ORDER BY tf.confirmed_at, fs.name",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops",
+      "transfer_items",
+      "product_variants"
+    ]
+  },
+  {
+    "id": "pos_109",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua pergerakan stok masuk (refund, transfer_in, restock) di toko Cabang Bekasi",
+    "query": "SELECT sm.created_at::date AS tanggal, sm.type, pv.sku, pv.name AS varian, sm.qty, sm.stock_before, sm.stock_after FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN shops s ON sm.shop_id = s.id WHERE s.name = 'Salamart Pengasih' AND sm.qty > 0 AND sm.type IN ('refund', 'transfer_in', 'restock') ORDER BY sm.created_at DESC",
+    "difficulty": "medium",
+    "domain": "audit",
+    "edge_cases": [
+      "type_filter"
+    ],
+    "tables_used": [
+      "stock_movements",
+      "product_variants",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_110",
+    "db_id": "pos_backend",
+    "question": "Tampilkan rata-rata interval hari kunjungan untuk 5 pelanggan loyal",
+    "query": "SELECT c.name AS pelanggan, COUNT(t.id) AS total_transaksi, MIN(t.paid_at)::date AS transaksi_pertama, MAX(t.paid_at)::date AS transaksi_terakhir, ROUND(EXTRACT(DAY FROM MAX(t.paid_at) - MIN(t.paid_at)) / NULLIF(COUNT(t.id) - 1, 0), 1) AS rata_interval_hari FROM transactions t JOIN customers c ON t.customer_id = c.id WHERE t.status = 'selesai' AND c.id IN ('44444444-4444-4444-8444-444444440001','44444444-4444-4444-8444-444444440002','44444444-4444-4444-8444-444444440003','44444444-4444-4444-8444-444444440004','44444444-4444-4444-8444-444444440005') GROUP BY c.id, c.name ORDER BY rata_interval_hari",
+    "difficulty": "extra_hard",
+    "domain": "pelanggan",
+    "edge_cases": [
+      "null_handling"
+    ],
+    "tables_used": [
+      "transactions",
+      "customers"
+    ]
+  },
+  {
+    "id": "pos_111",
+    "db_id": "pos_backend",
+    "question": "Berapa jumlah transaksi per hari di bulan April untuk toko Cabang Bekasi?",
+    "query": "SELECT paid_at::date AS tanggal, COUNT(*) AS jumlah_transaksi, SUM(subtotal) AS total_penjualan FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Pengasih' AND t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY paid_at::date ORDER BY tanggal",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_112",
+    "db_id": "pos_backend",
+    "question": "Tampilkan total nilai penjualan QRIS per toko di bulan Maret 2026",
+    "query": "SELECT s.name AS toko, COUNT(*) AS jumlah_transaksi, SUM(t.subtotal) AS total_nilai FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND t.payment_method = 'qris' AND DATE_TRUNC('month', t.paid_at) = '2026-03-01' GROUP BY s.id, s.name ORDER BY total_nilai DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_113",
+    "db_id": "pos_backend",
+    "question": "Tampilkan varian yang reserved_stock-nya lebih dari 0 (sedang dalam proses transfer keluar)",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, s.name AS toko, inv.stock, inv.reserved_stock, (inv.stock - inv.reserved_stock) AS stok_tersedia FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON inv.shop_id = s.id WHERE inv.reserved_stock > 0 ORDER BY inv.reserved_stock DESC",
+    "difficulty": "medium",
+    "domain": "inventori",
+    "edge_cases": [
+      "available_stock"
+    ],
+    "tables_used": [
+      "inventory",
+      "product_variants",
+      "products",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_114",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua transaksi beserta nama pelanggan di toko Cabang Depok di bulan April (termasuk walk-in)",
+    "query": "SELECT t.invoice_no, COALESCE(c.name, 'Walk-in') AS pelanggan, t.subtotal, t.payment_method, t.paid_at FROM transactions t LEFT JOIN customers c ON t.customer_id = c.id JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' ORDER BY t.paid_at DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "null_handling",
+      "left_join",
+      "status_filter"
+    ],
+    "tables_used": [
+      "transactions",
+      "customers",
+      "shops"
+    ],
+    "notes": "LEFT JOIN diperlukan agar transaksi walk-in (customer_id IS NULL) tetap tampil"
+  },
+  {
+    "id": "pos_115",
+    "db_id": "pos_backend",
+    "question": "Tampilkan rata-rata harga jual snapshot vs harga jual varian saat ini untuk setiap varian",
+    "query": "SELECT pv.sku, pv.name AS varian, pv.price AS harga_saat_ini, ROUND(AVG(ti.price), 2) AS rata_harga_snapshot, ROUND(pv.price - AVG(ti.price), 2) AS selisih FROM transaction_items ti JOIN product_variants pv ON ti.product_variant_id = pv.id GROUP BY pv.id, pv.sku, pv.name, pv.price ORDER BY ABS(pv.price - AVG(ti.price)) DESC",
+    "difficulty": "hard",
+    "domain": "produk",
+    "edge_cases": [
+      "snapshot_price"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "product_variants"
+    ],
+    "notes": "transaction_items.price adalah snapshot harga saat transaksi, bisa berbeda dari harga varian saat ini"
+  },
+  {
+    "id": "pos_116",
+    "db_id": "pos_backend",
+    "question": "Berapa total qty Indomie (semua varian) yang terjual di setiap toko bulan April?",
+    "query": "SELECT s.name AS toko, SUM(ti.qty) AS total_qty, SUM(ti.subtotal) AS total_revenue FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON t.shop_id = s.id WHERE p.name = 'Indomie' AND t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY s.id, s.name ORDER BY total_qty DESC",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_117",
+    "db_id": "pos_backend",
+    "question": "Tampilkan detail refund beserta nama kasir yang memprosesnya dan nomor invoice transaksi asal",
+    "query": "SELECT r.id AS refund_id, t.invoice_no, u.name AS diproses_oleh, r.total_amount, r.reason, r.status, r.created_at FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC",
+    "difficulty": "medium",
+    "domain": "refund",
+    "edge_cases": [],
+    "tables_used": [
+      "refunds",
+      "transactions",
+      "users"
+    ]
+  },
+  {
+    "id": "pos_118",
+    "db_id": "pos_backend",
+    "question": "Hitung total penjualan kasir menggunakan LAG untuk membandingkan dengan kasir sebelumnya dalam ranking",
+    "query": "SELECT u.name AS kasir, s.name AS toko, SUM(t.subtotal) AS total_penjualan, LAG(SUM(t.subtotal)) OVER (ORDER BY SUM(t.subtotal) DESC) AS penjualan_kasir_diatas, SUM(t.subtotal) - LAG(SUM(t.subtotal)) OVER (ORDER BY SUM(t.subtotal) DESC) AS selisih FROM transactions t JOIN users u ON t.user_id = u.id JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND u.role = 'user' GROUP BY u.id, u.name, s.id, s.name ORDER BY total_penjualan DESC",
+    "difficulty": "extra_hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "role_filter",
+      "window_function"
+    ],
+    "tables_used": [
+      "transactions",
+      "users",
+      "shops"
+    ]
+  },
+  {
+    "id": "pos_119",
+    "db_id": "pos_backend",
+    "question": "Tampilkan refund items beserta detail transaksi aslinya dan nama varian yang dikembalikan",
+    "query": "SELECT r.id AS refund_id, t.invoice_no, pv.sku, pv.name AS varian, ri.qty AS qty_refund, ri.amount AS nilai_refund, r.reason, r.created_at FROM refund_items ri JOIN refunds r ON ri.refund_id = r.id JOIN transaction_items ti ON ri.transaction_item_id = ti.id JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id WHERE r.status = 'approved' ORDER BY r.created_at DESC",
+    "difficulty": "medium",
+    "domain": "refund",
+    "edge_cases": [
+      "status_filter",
+      "partial_refund"
+    ],
+    "tables_used": [
+      "refund_items",
+      "refunds",
+      "transaction_items",
+      "transactions",
+      "product_variants"
+    ]
+  },
+  {
+    "id": "pos_120",
+    "db_id": "pos_backend",
+    "question": "Tampilkan produk Sembako dengan total penjualan dan sisa stok saat ini di toko Pusat",
+    "query": "SELECT p.name AS produk, pv.sku, pv.name AS varian, COALESCE(SUM(ti.qty), 0) AS total_terjual, inv.stock AS stok_saat_ini, (inv.stock - inv.reserved_stock) AS stok_tersedia FROM products p JOIN categories c ON p.category_id = c.id JOIN product_variants pv ON p.id = pv.product_id LEFT JOIN transaction_items ti ON pv.id = ti.product_variant_id LEFT JOIN transactions t ON ti.transaction_id = t.id AND t.status = 'selesai' JOIN inventory inv ON pv.id = inv.product_variant_id JOIN shops s ON inv.shop_id = s.id WHERE c.name = 'Sembako' AND s.name = 'Salamart Dalangan' GROUP BY p.name, pv.id, pv.sku, pv.name, inv.stock, inv.reserved_stock ORDER BY total_terjual DESC",
+    "difficulty": "hard",
+    "domain": "inventori",
+    "edge_cases": [
+      "available_stock",
+      "left_join",
+      "null_handling"
+    ],
+    "tables_used": [
+      "products",
+      "categories",
+      "product_variants",
+      "transaction_items",
+      "transactions",
+      "inventory",
+      "shops"
+    ]
+  }
+]

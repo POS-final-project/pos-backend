@@ -1,0 +1,87 @@
+id,module,item_type,key,name,http_method,api_path,roles,scope,primary_tables,notes
+1,auth,API,auth.login,Login,POST,/api/auth/login,superAdmin|admin|user,global,users,
+2,auth,API,auth.refresh,Refresh token,POST,/api/auth/refresh,superAdmin|admin|user,global,users,
+3,auth,API,auth.logout,Logout,POST,/api/auth/logout,superAdmin|admin|user,global,users,
+4,auth,API,auth.registerAdmin,Register admin,POST,/api/auth/register/admin,superAdmin,global,users|user_shops,
+5,auth,API,auth.registerUser,Register user,POST,/api/auth/register/user,superAdmin|admin,shop_or_global,users|user_shops,
+6,auth,API,auth.forgotPassword,Forgot password request,POST,/api/auth/forgot-password,superAdmin|admin|user,global,users,Kirim email berisi JWT short-lived link
+7,auth,API,auth.resetPassword,Reset password,POST,/api/auth/reset-password,superAdmin|admin|user,global,users,Verifikasi JWT dari email lalu update password
+8,auth,API,auth.changePassword,Change password,POST,/api/auth/change-password,superAdmin|admin|user,global,users,
+9,profile,API,profile.getMe,Get profile,GET,/api/profile,superAdmin|admin|user,global,users,
+10,profile,API,profile.updateMe,Update profile,PATCH,/api/profile,superAdmin|admin|user,global,users,
+11,profile,API,profile.updatePhoto,Update profile photo,PATCH,/api/profile/photo,superAdmin|admin|user,global,users,
+12,shops,API,shops.list,Get shops,GET,/api/shops,superAdmin|admin,shop_or_global,shops|user_shops,SuperAdmin dapat semua; Admin hanya tokonya
+13,shops,API,shops.create,Create shop,POST,/api/shops,superAdmin,global,shops,
+14,shops,API,shops.detail,Get shop detail,GET,/api/shops/:shopId,superAdmin|admin,shop_or_global,shops|user_shops,
+15,shops,API,shops.update,Update shop,PATCH,/api/shops/:shopId,superAdmin|admin,shop_or_global,shops,Admin hanya bisa update tokonya sendiri
+16,shops,API,shops.delete,Delete shop,DELETE,/api/shops/:shopId,superAdmin,global,shops,
+17,shops,API,shops.assignStaff,Assign staff to shop,POST,/api/shops/:shopId/staff,superAdmin|admin,shop_or_global,user_shops|users|shops,
+18,shops,API,shops.removeStaff,Remove staff from shop,DELETE,/api/shops/:shopId/staff/:userId,superAdmin|admin,shop_or_global,user_shops|users|shops,
+19,shops,API,shops.listStaff,Get shop staff list,GET,/api/shops/:shopId/staff,superAdmin|admin,shop_or_global,user_shops|users|shops,
+20,categories,API,categories.list,Get categories,GET,/api/categories,superAdmin|admin|user,global,categories,
+21,categories,API,categories.create,Create category,POST,/api/categories,superAdmin,global,categories,
+22,categories,API,categories.update,Update category,PATCH,/api/categories/:categoryId,superAdmin,global,categories,
+23,categories,API,categories.delete,Delete category,DELETE,/api/categories/:categoryId,superAdmin,global,categories,
+24,products,API,products.list,Get products,GET,/api/products,superAdmin|admin|user,global,products|product_variants|categories,
+25,products,API,products.create,Create product,POST,/api/products,superAdmin|admin,global,products|product_variants,Admin bisa buat produk global
+26,products,API,products.detail,Get product detail,GET,/api/products/:productId,superAdmin|admin|user,global,products|product_variants|categories,
+27,products,API,products.update,Update product,PATCH,/api/products/:productId,superAdmin|admin,global,products|product_variants,
+28,products,API,products.delete,Delete product,DELETE,/api/products/:productId,superAdmin|admin,global,products|product_variants,
+29,variants,API,variants.list,Get product variants,GET,/api/products/:productId/variants,superAdmin|admin|user,global,product_variants,
+30,variants,API,variants.create,Add variant to product,POST,/api/products/:productId/variants,superAdmin|admin,global,product_variants,
+31,variants,API,variants.detail,Get variant detail,GET,/api/products/:productId/variants/:variantId,superAdmin|admin|user,global,product_variants,
+32,variants,API,variants.update,Update variant,PATCH,/api/products/:productId/variants/:variantId,superAdmin|admin,global,product_variants,Termasuk update harga
+33,variants,API,variants.delete,Delete variant,DELETE,/api/products/:productId/variants/:variantId,superAdmin|admin,global,product_variants,Tidak boleh hapus jika masih ada stok
+34,inventory,API,inventory.list,Get inventory,GET,/api/inventory,superAdmin|admin,shop_or_global,inventory|product_variants|products|shops,
+35,inventory,API,inventory.byProduct,Get stock by product,GET,/api/inventory/products/:productId,superAdmin|admin,shop_or_global,inventory|product_variants|products|shops,
+36,inventory,API,inventory.restock,Stock in (restock),POST,/api/inventory/restock,superAdmin|admin,shop_or_global,inventory|stock_movements,User tidak bisa restock manual
+37,inventory,API,inventory.adjustOut,Stock out adjustment,POST,/api/inventory/adjustment-out,superAdmin|admin,shop_or_global,inventory|stock_movements,
+38,inventory,API,inventory.setThreshold,Set low stock threshold,PATCH,/api/inventory/:inventoryId/threshold,superAdmin|admin,shop_or_global,inventory,
+39,inventory,API,inventory.movementHistory,Get stock movement history,GET,/api/inventory/movements,superAdmin|admin,shop_or_global,stock_movements|products|product_variants|shops|users,
+40,transfers,API,transfers.create,Create transfer request,POST,/api/transfers,superAdmin|admin,shop_or_global,stock_transfers|stock_transfer_items|inventory,
+41,transfers,API,transfers.listOutgoing,Get outgoing transfers,GET,/api/transfers/outgoing,superAdmin|admin,shop_or_global,stock_transfers|stock_transfer_items|shops|users,SuperAdmin lihat semua toko
+42,transfers,API,transfers.listIncoming,Get incoming transfers,GET,/api/transfers/incoming,superAdmin|admin,shop_or_global,stock_transfers|stock_transfer_items|shops|users,SuperAdmin lihat semua toko
+43,transfers,API,transfers.detail,Get transfer detail,GET,/api/transfers/:transferId,superAdmin|admin,shop_or_global,stock_transfers|stock_transfer_items|shops|users,
+44,transfers,API,transfers.items,Get transfer items,GET,/api/transfers/:transferId/items,superAdmin|admin,shop_or_global,stock_transfer_items|product_variants|products,
+45,transfers,API,transfers.approve,Approve transfer,PATCH,/api/transfers/:transferId/approve,admin,shop,stock_transfers|stock_transfer_items|inventory|stock_movements,Otomatis buat 2 stock_movements saat approve
+46,transfers,API,transfers.reject,Reject transfer,PATCH,/api/transfers/:transferId/reject,admin,shop,stock_transfers,Hanya admin toko tujuan
+47,transfers,API,transfers.cancel,Cancel transfer,PATCH,/api/transfers/:transferId/cancel,admin,shop,stock_transfers,Hanya admin toko pengirim dan status masih pending
+48,transactions,API,transactions.create,Create transaction,POST,/api/transactions,admin|user,shop,transactions|transaction_items|inventory|stock_movements,Otomatis kurangi stok saat completed
+49,transactions,API,transactions.updateStatus,Update transaction status,PATCH,/api/transactions/:transactionId/status,admin|user,shop,transactions|inventory|stock_movements,
+50,transactions,API,transactions.list,Get transactions,GET,/api/transactions,superAdmin|admin|user,shop_or_global,transactions|transaction_items|shops|users|customers,
+51,transactions,API,transactions.today,Get today transactions,GET,/api/transactions/today,admin|user,shop,transactions|transaction_items|users|shops,
+52,transactions,API,transactions.recent,Get recent transactions,GET,/api/transactions/recent,admin|user,shop,transactions|transaction_items|users|shops,
+53,transactions,API,transactions.detail,Get transaction detail,GET,/api/transactions/:transactionId,superAdmin|admin|user,shop_or_global,transactions|transaction_items|products|product_variants|customers,
+54,transactions,API,transactions.receipt,Get receipt payload,GET,/api/transactions/:transactionId/receipt,admin|user,shop,transactions|transaction_items|shops|users|customers,
+55,refunds,API,refunds.create,Create refund,POST,/api/refunds,admin|user,shop,refunds|refund_items|transaction_items|transactions,
+56,refunds,API,refunds.updateStatus,Update refund status,PATCH,/api/refunds/:refundId/status,superAdmin|admin,shop_or_global,refunds|refund_items|inventory|stock_movements,Approve otomatis kembalikan stok
+57,refunds,API,refunds.list,Get refund list,GET,/api/refunds,superAdmin|admin|user,shop_or_global,refunds|refund_items|transactions|users,
+58,refunds,API,refunds.detail,Get refund detail,GET,/api/refunds/:refundId,superAdmin|admin|user,shop_or_global,refunds|refund_items|transaction_items|product_variants,
+59,customers,API,customers.list,Get customers,GET,/api/customers,superAdmin|admin,global,customers,Phase 2
+60,customers,API,customers.create,Create customer,POST,/api/customers,superAdmin|admin,global,customers,Phase 2
+61,customers,API,customers.detail,Get customer detail,GET,/api/customers/:customerId,superAdmin|admin,global,customers|transactions,Phase 2
+62,customers,API,customers.update,Update customer,PATCH,/api/customers/:customerId,superAdmin|admin,global,customers,Phase 2
+63,customers,API,customers.delete,Delete customer,DELETE,/api/customers/:customerId,superAdmin|admin,global,customers,Phase 2
+64,customers,API,customers.transactions,Get customer transaction history,GET,/api/customers/:customerId/transactions,superAdmin|admin,global,customers|transactions|transaction_items,Phase 2
+65,reports,API,reports.request.transactions,Request transaction report,POST,/api/reports/transactions,superAdmin|admin,shop_or_global,transactions|transaction_items|shops|users,Sinkronus — langsung return file PDF atau XLS
+66,reports,API,reports.request.products,Request product report,POST,/api/reports/products,superAdmin|admin,shop_or_global,products|product_variants|categories,Sinkronus — langsung return file PDF atau XLS
+67,reports,API,reports.request.inventory,Request inventory report,POST,/api/reports/inventory,superAdmin|admin,shop_or_global,inventory|products|product_variants|shops,Sinkronus — langsung return file PDF atau XLS
+68,reports,API,reports.request.stockMovements,Request stock movement report,POST,/api/reports/stock-movements,superAdmin|admin,shop_or_global,stock_movements|products|product_variants|shops|users,Sinkronus — langsung return file PDF atau XLS
+69,ai_chat,API,ai_chat.listSessions,Get AI chat sessions,GET,/api/ai/chat/sessions,superAdmin|admin,shop_or_global,ai_chat_sessions|users|shops,
+70,ai_chat,API,ai_chat.sendMessage,Send AI chat message,POST,/api/ai/chat/messages,superAdmin|admin,shop_or_global,ai_chat_sessions|ai_chat_messages|users|shops,Buat session baru jika belum ada
+71,ai_chat,API,ai_chat.getHistory,Get AI chat history,GET,/api/ai/chat/sessions/:sessionId/messages,superAdmin|admin,shop_or_global,ai_chat_sessions|ai_chat_messages,
+72,ai_chat,API,ai_chat.clearSession,Clear AI chat session,DELETE,/api/ai/chat/sessions/:sessionId,superAdmin|admin,shop_or_global,ai_chat_sessions|ai_chat_messages,Hapus semua pesan dalam sesi ini
+73,ai_insights,API,ai_insights.generate.daily,Generate daily insight,POST,/api/ai/insights/generate/daily,superAdmin|admin,shop_or_global,ai_insights|transactions|inventory|notifications|shops,Dipanggil scheduler — bisa juga manual
+74,ai_insights,API,ai_insights.generate.weekly,Generate weekly insight,POST,/api/ai/insights/generate/weekly,superAdmin|admin,shop_or_global,ai_insights|transactions|inventory|notifications|shops,
+75,ai_insights,API,ai_insights.generate.monthly,Generate monthly insight,POST,/api/ai/insights/generate/monthly,superAdmin|admin,shop_or_global,ai_insights|transactions|inventory|notifications|shops,
+76,ai_insights,API,ai_insights.generate.yearly,Generate yearly insight,POST,/api/ai/insights/generate/yearly,superAdmin|admin,shop_or_global,ai_insights|transactions|inventory|notifications|shops,
+77,ai_insights,API,ai_insights.list,Get insights list,GET,/api/ai/insights,superAdmin|admin,shop_or_global,ai_insights|shops,
+78,ai_insights,API,ai_insights.detail,Get insight detail,GET,/api/ai/insights/:insightId,superAdmin|admin,shop_or_global,ai_insights,
+79,notifications,API,notifications.list,Get notifications,GET,/api/notifications,superAdmin|admin|user,global,notifications|users|shops,
+80,notifications,API,notifications.unreadCount,Get unread notification count,GET,/api/notifications/unread-count,superAdmin|admin|user,global,notifications,Untuk badge di UI
+81,notifications,API,notifications.markRead,Mark notification read/unread,PATCH,/api/notifications/:notificationId/read,superAdmin|admin|user,global,notifications,
+82,notifications,API,notifications.markAllRead,Mark all notifications as read,PATCH,/api/notifications/read-all,superAdmin|admin|user,global,notifications,
+83,notifications,API,notifications.delete,Delete notification,DELETE,/api/notifications/:notificationId,superAdmin|admin|user,global,notifications,
+84,audit,API,audit.list,Get audit logs,GET,/api/audit-logs,superAdmin|admin,shop_or_global,audit_logs|users|shops,
+85,health,API,health.check,Health check,GET,/,public,global,,
+86,meta,API,meta.enums,Get reference enums,GET,/api/meta/enums,superAdmin|admin|user,global,,Return semua enum values yang dipakai frontend

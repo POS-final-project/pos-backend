@@ -1,0 +1,18 @@
+'use strict';
+
+const jwt = require('jsonwebtoken');
+
+const ACCESS_SECRET = process.env.JWT_SECRET || 'pos_access_secret';
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'pos_refresh_secret';
+
+exports.signAccess = (payload) =>
+  jwt.sign(payload, ACCESS_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || '15m' });
+
+exports.signRefresh = (payload) =>
+  jwt.sign(payload, REFRESH_SECRET, { expiresIn: '7d' });
+
+exports.signReset = (payload) =>
+  jwt.sign(payload, ACCESS_SECRET, { expiresIn: '15m' });
+
+exports.verifyAccess = (token) => jwt.verify(token, ACCESS_SECRET);
+exports.verifyRefresh = (token) => jwt.verify(token, REFRESH_SECRET);

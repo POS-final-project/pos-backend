@@ -1,0 +1,231 @@
+# POS - Point Of Sale
+
+## USER ROLES:
+- superAdmin (owner)
+- admin (shop admin)
+- user (cashier)
+
+
+==========================================================
+LIST FITUR
+==========================================================
+ 
+1. AUTHENTICATION
+----------------------------------------------------------
+- Login
+- Register (User by Admin, Admin by SuperAdmin)
+- Forgot Password
+- Change Password
+- Logout
+ 
+----------------------------------------------------------
+2. DASHBOARD
+----------------------------------------------------------
+- Get overview analytics (revenue, transaction, top product)
+- Get sales chart (daily / monthly)
+- Get revenue breakdown by payment method
+- Get revenue breakdown by product category
+- Download:
+  - Transaction report (PDF)
+  - Product report (CSV)
+  - Inventory report (CSV)
+  - Stock movement report (CSV)
+ 
+----------------------------------------------------------
+3. POS
+----------------------------------------------------------
+- Create Transaction
+  - Select payment method (cash / transfer / QRIS / credit)
+  - Select customer (optional, for loyalty tracking)
+- Update Transaction Status (pending → completed / cancelled)
+- Get Recent Transactions (by current user / active shift)
+- Print Receipt (auto completed)
+- Open Shift (start cashier session)
+- Close Shift (end cashier session + summary)
+ 
+----------------------------------------------------------
+4. TRANSACTIONS
+----------------------------------------------------------
+- Get All Transactions (SuperAdmin)
+- Get Transactions by Shop (Admin)
+- Get Today Transactions (User - limited to active shift)
+- Get Transaction Detail
+- Filter Transactions (date, shop, user, payment method, status)
+- Filter Transactions by category
+- Download Transaction Data (CSV / PDF)
+- Create Return / Refund
+  - Select item(s) to return
+  - Reason for return
+  - Auto restock returned items to inventory
+- Get Return / Refund History
+ 
+----------------------------------------------------------
+5. PRODUCT MANAGEMENT
+----------------------------------------------------------
+- Category Management:
+  - Get All Categories
+  - Create Category
+  - Update Category
+  - Delete Category
+- Get All Products (SuperAdmin)
+- Get Products by Shop (Admin)
+- Create Product
+  - Include: name, SKU, price, category, stock unit
+  - Optional: product variants (size, flavor, etc.)
+- Update Product
+- Delete Product
+- Get Product Detail
+- Download Product Data (CSV)
+ 
+----------------------------------------------------------
+6. INVENTORY
+----------------------------------------------------------
+- Get All Inventory (SuperAdmin)
+- Get Inventory by Shop (Admin)
+- Get Stock by Product
+- Stock In (Receive / Restock)
+- Stock Out (Manual Adjustment)
+- Get Stock Movement History
+- Filter Stock Movement (by date, product, type)
+- Low Stock Threshold Setting (per product)
+- Download Inventory Data (CSV)
+- Download Stock Movement Data (CSV)
+ 
+----------------------------------------------------------
+7. STOCK TRANSFER (INTER-SHOP)
+----------------------------------------------------------
+-- OUTGOING (Source Shop)
+- Create Transfer Request (to another shop)
+- Get Outgoing Transfers
+- Cancel Transfer (if not confirmed)
+ 
+-- INCOMING (Destination Shop)
+- Get Incoming Transfers
+- Confirm Transfer Received
+- Reject Transfer
+ 
+-- GENERAL
+- Get Transfer Detail
+- Transfer Status:
+  - pending
+  - completed
+  - cancelled
+  - rejected
+ 
+----------------------------------------------------------
+8. AI ASSISTANT
+----------------------------------------------------------
+-- CHATBOT (QnA)
+- Send Chat Message
+  - Context scope by role:
+      SuperAdmin → data seluruh cabang
+      Admin      → data cabang sendiri
+      User       → tidak memiliki akses AI chat
+- Get Chat History (per user, per session)
+- Clear / Reset Chat History
+ 
+-- PROACTIVE INSIGHTS (Scheduled)
+- Generate Daily Insight
+  - Trigger: cron job setiap sore (misal: 17.00)
+  - Scope: transaksi hari ini, stok kritis
+- Generate Weekly Insight
+  - Trigger: cron job setiap akhir pekan (Sabtu malam / Minggu)
+  - Scope: performa mingguan, tren produk, perbandingan minggu lalu
+- Generate Monthly Insight
+  - Trigger: cron job setiap akhir bulan
+  - Scope: revenue bulanan, produk terlaris, analisis stok
+- Generate Yearly Insight
+  - Trigger: on-demand atau cron job akhir tahun
+  - Scope: ringkasan tahunan, tren pertumbuhan
+ 
+-- FORMAT OUTPUT INSIGHT
+- Ringkasan naratif (teks)
+- Highlight anomali / peringatan
+- Rekomendasi aksi konkret (min. 1-3 poin)
+- Dikirim via modul Notification (type: Insight Result)
+ 
+----------------------------------------------------------
+9. NOTIFICATION
+----------------------------------------------------------
+- Get All Notifications (by user)
+- Mark as Read / Unread
+- Delete Notification
+- Auto Notification:
+  - Low Stock Alert (threshold dari setting inventory)
+  - Incoming Transfer
+  - Transfer Confirmed
+  - Transfer Rejected
+  - Insight Result (dari AI Assistant)
+  - Return / Refund Created
+  - Shift Opened / Closed
+  - System Notification
+ 
+----------------------------------------------------------
+10. SHOP
+----------------------------------------------------------
+- Get All Shops (SuperAdmin)
+- Create Shop (SuperAdmin)
+- Get Shop Detail
+- Update Shop
+- Delete Shop (SuperAdmin)
+- Assign Admin to Shop
+- Assign User to Shop
+- Remove User/Admin from Shop
+- Get Shop Staff List
+ 
+----------------------------------------------------------
+11. PROFILE
+----------------------------------------------------------
+- Get Profile Detail
+- Update Profile
+- Update Profile Photo
+ 
+----------------------------------------------------------
+12. CUSTOMER (OPSIONAL / FASE 2)
+----------------------------------------------------------
+- Get All Customers (Admin / SuperAdmin)
+- Create Customer
+- Get Customer Detail
+- Update Customer
+- Delete Customer
+- Get Customer Transaction History
+- (Catatan: digunakan untuk analisis repeat buyer di AI)
+ 
+----------------------------------------------------------
+13. AUDIT LOG
+----------------------------------------------------------
+- Get Audit Log (SuperAdmin / Admin)
+- Filter by: user, action type, date, module
+- Action types yang dicatat:
+  - Product price change
+  - Manual stock adjustment
+  - User role change
+  - Transaction cancellation
+  - Return / Refund
+  - Shift open / close
+ 
+==========================================================
+CATATAN IMPLEMENTASI
+==========================================================
+ 
+PAYMENT METHODS (untuk Transaksi):
+  - Cash (tunai)
+  - Transfer Bank
+  - QRIS / E-Wallet
+  - Credit / Hutang (dengan catatan pelanggan)
+ 
+EXPORT FORMAT:
+  - Laporan terformat         → PDF
+  - Data mentah / bulk        → CSV
+  - (Opsional Excel / XLSX jika diminta klien)
+
+- Setiap data berdasarkan active_shop
+- Transaction akan mempengaruhi Inventory
+- Inventory menggunakan stock movement (bukan edit langsung)
+- AI membaca data dari Transactions & Inventory
+- Semua perubahan data sensitif tercatat di Audit Log
+
+
+
+
+
