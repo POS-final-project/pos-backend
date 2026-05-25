@@ -14,7 +14,7 @@ router.get("/", auth, ctrl.list);
 router.post(
   "/",
   auth,
-  authorize("superAdmin", "admin", "user"),
+  authorize("superAdmin", "admin"),
   productVariantUpload.any(),
   ctrl.create,
 );
@@ -37,7 +37,7 @@ router.get("/:productId/variants", auth, ctrl.listVariants);
 router.post(
   "/:productId/variants",
   auth,
-  authorize("superAdmin", "admin", "user"),
+  authorize("superAdmin", "admin"),
   productVariantUpload.single("image"),
   ctrl.createVariant,
 );

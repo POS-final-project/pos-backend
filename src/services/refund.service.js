@@ -1,5 +1,6 @@
 'use strict';
 
+const { Op } = require('sequelize');
 const {
   Refund, RefundItem, Transaction, TransactionItem,
   Inventory, StockMovement, User, Shop, UserShop,
@@ -109,11 +110,21 @@ exports.create = async ({ transaction_id, reason, items }, userId, userRole, ctx
       if (item.qty > txItem.qty)
         throw { status: 400, message: `Qty refund melebihi qty pembelian untuk item ${item.transaction_item_id}` };
 
-      const alreadyRefunded = (await RefundItem.sum('qty', {
-        include: [{ model: Refund, where: { status: 'approved' } }],
-        where: { transaction_item_id: item.transaction_item_id },
+      const approvedRefundIds = (await Refund.findAll({
+        where: { transaction_id, status: 'approved' },
+        attributes: ['id'],
         transaction: t,
-      })) || 0;
+      })).map((r) => r.id);
+
+      const alreadyRefunded = approvedRefundIds.length > 0
+        ? (await RefundItem.sum('qty', {
+            where: {
+              transaction_item_id: item.transaction_item_id,
+              refund_id: { [Op.in]: approvedRefundIds },
+            },
+            transaction: t,
+          })) || 0
+        : 0;
       if (alreadyRefunded + item.qty > txItem.qty)
         throw { status: 400, message: `Total qty refund melebihi qty pembelian untuk item ${item.transaction_item_id}` };
 

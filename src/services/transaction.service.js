@@ -3,7 +3,7 @@
 const { Op } = require('sequelize');
 const {
   Transaction, TransactionItem, Inventory, StockMovement,
-  ProductVariant, Product, Customer, Shop, User, UserShop,
+  ProductVariant, Product, Customer, Shop, User, UserShop, Refund,
 } = require('../models');
 const { getPagination, getMeta } = require('../utils/pagination');
 const auditLogService    = require('./auditLog.service');
@@ -133,6 +133,10 @@ exports.getReceipt = async (transactionId, shopId, userRole) => {
 // ─── create ───────────────────────────────────────────────────────────────────
 
 const generateInvoiceNo = async (t) => {
+  // Advisory lock serializes concurrent invoice generation within the same DB transaction.
+  // Key 20250001 is an arbitrary constant — all callers block on the same lock.
+  await Transaction.sequelize.query('SELECT pg_advisory_xact_lock(20250001)', { transaction: t });
+
   const now = new Date();
   const yyyy = now.getFullYear();
   const mm = String(now.getMonth() + 1).padStart(2, '0');
@@ -289,8 +293,14 @@ exports.cancel = async (transactionId, shopId, userId, userRole, ctx = {}) => {
   if (userRole !== 'superAdmin' && trx.shop_id !== shopId)
     throw { status: 403, message: 'Akses ke transaksi ini tidak diizinkan' };
 
-  if (trx.status === 'refunded')
-    throw { status: 400, message: 'Transaksi sudah dibatalkan sebelumnya' };
+  if (trx.status === 'refunded' || trx.status === 'cancelled')
+    throw { status: 400, message: 'Transaksi sudah dibatalkan atau direfund sebelumnya' };
+
+  const approvedRefundCount = await Refund.count({
+    where: { transaction_id: transactionId, status: 'approved' },
+  });
+  if (approvedRefundCount > 0)
+    throw { status: 400, message: 'Transaksi ini sudah memiliki refund yang disetujui, tidak dapat dibatalkan' };
 
   const sequelize = Transaction.sequelize;
   const result = await sequelize.transaction(async (t) => {

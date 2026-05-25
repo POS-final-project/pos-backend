@@ -2,7 +2,7 @@
 
 const bcrypt = require('bcryptjs');
 const { User, UserShop, Shop } = require('../models');
-const { signAccess, signRefresh, signReset, verifyRefresh, verifyAccess } = require('../utils/jwt');
+const { signAccess, signRefresh, signReset, verifyRefresh, verifyAccess, verifyReset } = require('../utils/jwt');
 const emailService = require('./email.service');
 const auditLogService = require('./auditLog.service');
 
@@ -117,7 +117,7 @@ exports.forgotPassword = async (email) => {
 exports.resetPassword = async (token, newPassword, ctx = {}) => {
   let payload;
   try {
-    payload = verifyAccess(token);
+    payload = verifyReset(token);
   } catch {
     throw { status: 400, message: 'Token invalid atau expired' };
   }

@@ -5,6 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 
+const MIME_EXT = { "image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp" };
+
 function createStorage(subDir) {
   return multer.diskStorage({
     destination: (req, file, cb) => {
@@ -14,7 +16,8 @@ function createStorage(subDir) {
     },
     filename: (req, file, cb) => {
       const unique = crypto.randomBytes(12).toString("hex");
-      cb(null, `${unique}${path.extname(file.originalname)}`);
+      const ext = MIME_EXT[file.mimetype] || ".bin";
+      cb(null, `${unique}${ext}`);
     },
   });
 }
