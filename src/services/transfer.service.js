@@ -156,7 +156,7 @@ exports.items = async (transferId, userId, userRole) => {
     if (!assignment) throw { status: 403, message: 'Akses tidak diizinkan' };
   }
 
-  return await TransferItem.findAll({
+  const rows = await TransferItem.findAll({
     where: { transfer_id: transferId },
     include: [
       {
@@ -165,6 +165,23 @@ exports.items = async (transferId, userId, userRole) => {
         include: [{ model: Product, attributes: ['id', 'name'] }],
       },
     ],
+  });
+
+  return rows.map((row) => {
+    const plain = row.toJSON();
+    // Normalisasi key asosiasi (Sequelize bisa return 'ProductVariant' atau 'product_variant')
+    const variant = plain.ProductVariant ?? plain.product_variant ?? null;
+    const product = variant?.Product ?? variant?.product ?? null;
+    return {
+      id: plain.id,
+      transfer_id: plain.transfer_id,
+      product_variant_id: plain.product_variant_id,
+      qty: plain.qty,
+      note: plain.note ?? null,
+      product_name: product?.name ?? null,
+      variant_name: variant?.name ?? null,
+      variant_sku: variant?.sku ?? null,
+    };
   });
 };
 

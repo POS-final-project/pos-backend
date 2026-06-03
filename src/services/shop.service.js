@@ -9,7 +9,8 @@ exports.list = async (query, requesterId, requesterRole) => {
   const { page, limit, offset } = getPagination(query);
   const where = { is_active: true };
 
-  if (requesterRole !== 'superAdmin') {
+  // all=1: return all active shops regardless of role (dipakai untuk dropdown tujuan transfer)
+  if (requesterRole !== 'superAdmin' && query.all !== '1') {
     const assignments = await UserShop.findAll({ where: { user_id: requesterId } });
     const shopIds = assignments.map((a) => a.shop_id);
     where.id = { [Op.in]: shopIds };

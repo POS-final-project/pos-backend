@@ -8,6 +8,7 @@ const shopAccess = require('../middlewares/shopAccess');
 
 router.get('/', auth, authorize('superAdmin', 'admin', 'user'), shopAccess, ctrl.list);
 router.post('/', auth, authorize('superAdmin', 'admin', 'user'), ctrl.create);
+router.get('/invoice/:invoiceNo', auth, authorize('superAdmin', 'admin', 'user'), shopAccess, ctrl.findByInvoice);
 router.get('/:transactionId/receipt', auth, authorize('superAdmin', 'admin', 'user'), shopAccess, ctrl.receipt);
 router.get('/:transactionId', auth, authorize('superAdmin', 'admin', 'user'), shopAccess, ctrl.detail);
 router.patch('/:transactionId/cancel', auth, authorize('superAdmin', 'admin', 'user'), shopAccess, ctrl.cancel);

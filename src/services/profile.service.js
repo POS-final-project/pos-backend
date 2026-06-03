@@ -1,6 +1,6 @@
 "use strict";
 
-const { User } = require("../models");
+const { User, UserShop } = require("../models");
 const auditLogService = require("./auditLog.service");
 
 const SAFE_ATTRS = [
@@ -18,7 +18,16 @@ const SAFE_ATTRS = [
 exports.getMe = async (userId) => {
   const user = await User.findByPk(userId, { attributes: SAFE_ATTRS });
   if (!user) throw { status: 404, message: "User tidak ditemukan" };
-  return user;
+
+  const plain = user.toJSON();
+  if (plain.role !== 'superAdmin') {
+    const assignment = await UserShop.findOne({ where: { user_id: userId }, attributes: ['shop_id'] });
+    plain.shopId = assignment ? assignment.shop_id : null;
+  } else {
+    plain.shopId = null;
+  }
+
+  return plain;
 };
 
 exports.updateMe = async (userId, { name, email, phone }, ctx = {}) => {

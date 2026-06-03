@@ -1065,7 +1065,7 @@ function buildInventorySeedRows() {
         : shopId === SALAMART_CIKLI
           ? "77777777-7777-4777-8778-"
           : "77777777-7777-4777-8779-";
-    const stockScale = shopKey === "C" ? 2.1 : 1.9;
+    const stockScale = 7.5;
 
     for (const variantIndex of shopInventoryVariants[shopId]) {
       const variant = variantRows.find((v) => v.id === V(variantIndex));

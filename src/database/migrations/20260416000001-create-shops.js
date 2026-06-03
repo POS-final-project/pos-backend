@@ -40,6 +40,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.dropTable('shops');
+    await queryInterface.sequelize.query('DROP TABLE IF EXISTS shops CASCADE');
   },
 };

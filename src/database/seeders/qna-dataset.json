@@ -1,4 +1,4 @@
-﻿[
+[
   {
     "id": "pos_001",
     "db_id": "pos_backend",
@@ -11,7 +11,8 @@
     ],
     "tables_used": [
       "shops"
-    ]
+    ],
+    "expected_answer": "Terdapat 3 toko aktif: Salamart Dalangan (Dalangan, Triharjo, Wates, Kulon Progo, DIY 55651, telp 085712340001), Salamart Cikli (Jl. Ki Josuto, Polodadi, Hargorejo, Kokap, Kulon Progo, DIY 55654, telp 085712340002), dan Salamart Pengasih (Jl. Pengasih - Wates, Kepek, Pengasih, Kulon Progo, DIY 55664, telp 085712340003)."
   },
   {
     "id": "pos_002",
@@ -26,7 +27,8 @@
     ],
     "tables_used": [
       "users"
-    ]
+    ],
+    "expected_answer": "Kasir aktif saat ini ada 4 orang: Rina Wulandari dan Doni Prasetyo (Salamart Dalangan), Yanti Susanti (Salamart Cikli), dan Agus Setiawan (Salamart Pengasih)."
   },
   {
     "id": "pos_003",
@@ -38,7 +40,8 @@
     "edge_cases": [],
     "tables_used": [
       "categories"
-    ]
+    ],
+    "expected_answer": "Terdapat 5 kategori produk: Minuman, Makanan Ringan, Sembako, Produk Susu, dan Kebersihan Diri."
   },
   {
     "id": "pos_004",
@@ -53,13 +56,14 @@
     "tables_used": [
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "15 produk aktif dengan kategorinya: Aqua Botol, Teh Botol Sosro, Coca-Cola, Pocari Sweat (Minuman); Indomie, Chitato, Oreo, Biskuat (Makanan Ringan); Beras Premium, Minyak Goreng Tropical, Gula Pasir Gulaku (Sembako); Indomilk UHT, Frisian Flag (Produk Susu); Lifebuoy Sabun Cair, Pantene Shampoo (Kebersihan Diri)."
   },
   {
     "id": "pos_005",
     "db_id": "pos_backend",
     "question": "Tampilkan semua varian produk Aqua Botol beserta harganya",
-    "query": "SELECT pv.name AS varian, pv.sku, pv.price FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE p.name = 'Aqua Botol' AND pv.is_active = TRUE ORDER BY pv.price",
+    "query": "SELECT pv.name, pv.price FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE p.name = 'Aqua Botol' AND pv.is_active = TRUE ORDER BY pv.price",
     "difficulty": "simple",
     "domain": "produk",
     "edge_cases": [
@@ -68,7 +72,8 @@
     "tables_used": [
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Varian aktif Aqua Botol ada 2: 600ml (AQU-600) seharga Rp 3.500 dan 1500ml (AQU-1500) seharga Rp 7.000."
   },
   {
     "id": "pos_006",
@@ -82,7 +87,8 @@
     ],
     "tables_used": [
       "customers"
-    ]
+    ],
+    "expected_answer": "Dari 60 pelanggan terdaftar, sekitar 45 pelanggan memiliki alamat email. Ditampilkan nama, email, dan nomor telepon masing-masing pelanggan, diurutkan berdasarkan nama."
   },
   {
     "id": "pos_007",
@@ -96,7 +102,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "Dalam sistem ini tidak ada transaksi dengan status refunded. Semua transaksi memiliki status selesai, dan data refund dicatat secara terpisah di tabel refunds. Query WHERE status=refunded akan mengembalikan 0 baris."
   },
   {
     "id": "pos_008",
@@ -112,7 +119,8 @@
     "tables_used": [
       "transfers",
       "shops"
-    ]
+    ],
+    "expected_answer": "Transfer yang masih pending ada 2: (1) Salamart Cikli → Salamart Pengasih (20 Mar 2026, Pocari Sweat & Coca-Cola); (2) Salamart Pengasih → Salamart Dalangan (28 Apr 2026, Aqua Botol 600ml)."
   },
   {
     "id": "pos_009",
@@ -126,7 +134,8 @@
     ],
     "tables_used": [
       "refunds"
-    ]
+    ],
+    "expected_answer": "Berikut refund yang sudah disetujui beserta alasan refundnya, ditampilkan ID refund, transaction_id, total jumlah refund, alasan, dan waktu pembuatan, diurutkan dari yang terbaru."
   },
   {
     "id": "pos_010",
@@ -142,7 +151,8 @@
     "tables_used": [
       "transactions"
     ],
-    "notes": "paid_at dipakai karena menunjukkan waktu pembayaran terjadi, bukan waktu transaksi dibuat"
+    "notes": "paid_at dipakai karena menunjukkan waktu pembayaran terjadi, bukan waktu transaksi dibuat",
+    "expected_answer": "Total transaksi yang diselesaikan (status selesai) di bulan Maret 2026 ditampilkan sebagai satu angka count, dihitung dari semua toko berdasarkan kolom paid_at."
   },
   {
     "id": "pos_011",
@@ -156,7 +166,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "10 transaksi terbaru berdasarkan waktu pembayaran: ditampilkan nomor invoice, shop_id, subtotal, metode pembayaran, dan paid_at untuk transaksi dengan status selesai."
   },
   {
     "id": "pos_012",
@@ -171,7 +182,8 @@
     "tables_used": [
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "Produk aktif dalam kategori Minuman ada 4: Aqua Botol, Teh Botol Sosro, Coca-Cola, dan Pocari Sweat, diurutkan berdasarkan nama."
   },
   {
     "id": "pos_013",
@@ -186,13 +198,14 @@
     "tables_used": [
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Varian aktif dengan harga di bawah Rp 10.000 ada 12 varian: IDM-GRG (Indomie Goreng) Rp 3.500, IDM-KAB (Indomie Kuah Ayam Bawang) Rp 3.500, AQU-600 (Aqua Botol 600ml) Rp 3.500, TBS-450 (Teh Botol Sosro 450ml) Rp 4.000, FFF-PT200 (Frisian Flag Putih 200ml) Rp 4.500, IML-FC200 (Indomilk UHT Full Cream 200ml) Rp 4.500, FFF-CK200 (Frisian Flag Coklat 200ml) Rp 5.000, CCL-390 (Coca-Cola 390ml) Rp 7.000, AQU-1500 (Aqua Botol 1500ml) Rp 7.000, TBS-1000 (Teh Botol Sosro 1 Liter) Rp 8.500, BSK-S100 (Biskuat Susu 100g) Rp 8.500, dan PCS-500 (Pocari Sweat 500ml) Rp 9.000."
   },
   {
     "id": "pos_014",
     "db_id": "pos_backend",
     "question": "Tampilkan stok saat ini untuk semua varian di toko Salamart Dalangan",
-    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, inv.stock, inv.reserved_stock, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' ORDER BY p.name, pv.name",
+    "query": "SELECT pv.name, inv.stock FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' ORDER BY pv.name",
     "difficulty": "simple",
     "domain": "inventori",
     "edge_cases": [],
@@ -201,7 +214,8 @@
       "product_variants",
       "products",
       "shops"
-    ]
+    ],
+    "expected_answer": "Stok saat ini seluruh varian di Salamart Dalangan (23 varian) ditampilkan dengan SKU, nama varian, nama produk, stok fisik, reserved stock, dan low stock threshold."
   },
   {
     "id": "pos_015",
@@ -213,7 +227,8 @@
     "edge_cases": [],
     "tables_used": [
       "customers"
-    ]
+    ],
+    "expected_answer": "Jumlah pelanggan yang terdaftar adalah 60 pelanggan."
   },
   {
     "id": "pos_016",
@@ -229,7 +244,8 @@
       "users",
       "user_shops",
       "shops"
-    ]
+    ],
+    "expected_answer": "Pengguna beserta toko tugasnya: Budi Hartono (admin), Rina Wulandari & Doni Prasetyo (kasir) di Salamart Dalangan; Sari Dewi (admin), Yanti Susanti (kasir) di Salamart Cikli; Hendra Kusuma (admin), Agus Setiawan (kasir) di Salamart Pengasih. Total 7 pengguna terdaftar di toko."
   },
   {
     "id": "pos_017",
@@ -246,13 +262,14 @@
     "tables_used": [
       "transactions"
     ],
-    "notes": "customer_id IS NULL berarti transaksi walk-in tanpa pelanggan terdaftar"
+    "notes": "customer_id IS NULL berarti transaksi walk-in tanpa pelanggan terdaftar",
+    "expected_answer": "Transaksi walk-in (customer_id IS NULL) yang diselesaikan di bulan April 2026 ditampilkan dengan nomor invoice, subtotal, metode pembayaran, dan paid_at, diurutkan dari transaksi terbaru."
   },
   {
     "id": "pos_018",
     "db_id": "pos_backend",
     "question": "Tampilkan semua transfer yang ditolak beserta alasannya",
-    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, tf.note, tf.confirmed_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE tf.status = 'rejected' ORDER BY tf.confirmed_at",
+    "query": "SELECT tf.id, tf.note FROM transfers tf WHERE tf.status = 'rejected' ORDER BY tf.id",
     "difficulty": "simple",
     "domain": "transfer",
     "edge_cases": [
@@ -262,7 +279,8 @@
     "tables_used": [
       "transfers",
       "shops"
-    ]
+    ],
+    "expected_answer": "Transfer yang ditolak ada 1: dari Salamart Dalangan ke Salamart Pengasih pada 5 April 2026, catatan: 'Request transfer sampo ke Pengasih — stok pusat tidak mencukupi'."
   },
   {
     "id": "pos_019",
@@ -276,7 +294,8 @@
     ],
     "tables_used": [
       "products"
-    ]
+    ],
+    "expected_answer": "Total produk aktif saat ini adalah 15 produk."
   },
   {
     "id": "pos_020",
@@ -291,12 +310,13 @@
     "tables_used": [
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Varian aktif dengan harga di atas Rp 50.000 ada 2: Beras Premium 10kg (BRS-10KG) Rp 150.000 dan Beras Premium 5kg (BRS-5KG) Rp 78.000."
   },
   {
     "id": "pos_021",
     "db_id": "pos_backend",
-    "question": "Tampilkan semua transaksi yang dibayar tunai di toko Cabang Depok",
+    "question": "Tampilkan semua transaksi yang dibayar tunai di toko Salamart Cikli",
     "query": "SELECT t.invoice_no, t.subtotal, t.paid_at FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND t.payment_method = 'cash' AND t.status = 'selesai' ORDER BY t.paid_at DESC",
     "difficulty": "simple",
     "domain": "penjualan",
@@ -306,7 +326,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Berikut transaksi yang dibayar tunai (cash) di Salamart Cikli dengan status selesai: nomor invoice, subtotal, dan waktu pembayaran ditampilkan, diurutkan dari transaksi terbaru."
   },
   {
     "id": "pos_022",
@@ -320,7 +341,8 @@
       "product_variants",
       "products"
     ],
-    "notes": "SKU hanya ada di product_variants, bukan di products (kolom sku di products sudah dihapus)"
+    "notes": "SKU hanya ada di product_variants, bukan di products (kolom sku di products sudah dihapus)",
+    "expected_answer": "Varian dengan SKU IDM-GRG adalah Indomie varian Goreng, produk Indomie, seharga Rp 3.500."
   },
   {
     "id": "pos_023",
@@ -336,7 +358,8 @@
       "users",
       "user_shops",
       "shops"
-    ]
+    ],
+    "expected_answer": "Jumlah kasir (role user) yang bertugas di Salamart Dalangan adalah 2 orang."
   },
   {
     "id": "pos_024",
@@ -350,7 +373,8 @@
     ],
     "tables_used": [
       "customers"
-    ]
+    ],
+    "expected_answer": "Semua pelanggan yang terdaftar memiliki nomor telepon. Query WHERE phone IS NULL tidak mengembalikan hasil karena data pelanggan di sistem ini selalu dilengkapi nomor telepon."
   },
   {
     "id": "pos_025",
@@ -365,7 +389,8 @@
     "tables_used": [
       "transactions",
       "users"
-    ]
+    ],
+    "expected_answer": "Jumlah transaksi yang diselesaikan oleh kasir Rina Wulandari ditampilkan sebagai satu angka count berdasarkan transaksi dengan status selesai."
   },
   {
     "id": "pos_026",
@@ -380,7 +405,8 @@
     "tables_used": [
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Saat ini tidak ada varian produk yang berstatus tidak aktif (is_active = FALSE). Semua 23 varian produk berstatus aktif."
   },
   {
     "id": "pos_027",
@@ -396,7 +422,8 @@
       "stock_movements",
       "shops",
       "product_variants"
-    ]
+    ],
+    "expected_answer": "Restock stok di bulan Maret 2026 menampilkan nama toko, SKU, qty restock, cost price, dan waktu restock. Restock Maret adalah stok awal simulasi yang diproses pada 1 Maret 2026 pukul 07:00."
   },
   {
     "id": "pos_028",
@@ -410,7 +437,8 @@
     ],
     "tables_used": [
       "refunds"
-    ]
+    ],
+    "expected_answer": "Total refund yang masih berstatus pending ditampilkan sebagai jumlah count dan total nilai (SUM total_amount). Jika tidak ada refund pending, hasilnya 0 dan 0."
   },
   {
     "id": "pos_029",
@@ -425,7 +453,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "Transaksi dengan catatan (note tidak null) yang diselesaikan di bulan April 2026 ditampilkan dengan nomor invoice, subtotal, note, dan paid_at, diurutkan dari terbaru."
   },
   {
     "id": "pos_030",
@@ -441,7 +470,8 @@
       "users",
       "user_shops"
     ],
-    "notes": "superAdmin biasanya tidak terdaftar di toko tertentu"
+    "notes": "superAdmin biasanya tidak terdaftar di toko tertentu",
+    "expected_answer": "Pengguna yang tidak terdaftar di toko manapun adalah Rizky Aziz (superAdmin), karena superAdmin tidak ditetapkan ke toko tertentu."
   },
   {
     "id": "pos_031",
@@ -457,7 +487,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total penjualan per toko di bulan Maret 2026 menampilkan nama toko, total penjualan kumulatif, dan jumlah transaksi selesai, diurutkan dari total penjualan tertinggi. Salamart Dalangan umumnya memiliki penjualan tertinggi sebagai toko utama."
   },
   {
     "id": "pos_032",
@@ -473,7 +504,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total penjualan per toko di bulan April 2026 menampilkan nama toko, total penjualan kumulatif, dan jumlah transaksi selesai, diurutkan dari total penjualan tertinggi."
   },
   {
     "id": "pos_033",
@@ -492,7 +524,8 @@
       "product_variants",
       "products"
     ],
-    "notes": "transaction_items tidak punya timestamp, filter tanggal harus via JOIN ke transactions"
+    "notes": "transaction_items tidak punya timestamp, filter tanggal harus via JOIN ke transactions",
+    "expected_answer": "10 varian terlaris di bulan Maret 2026 berdasarkan total qty terjual, menampilkan SKU, nama varian, nama produk, dan total qty. Indomie Goreng (IDM-GRG) dan Indomie Kuah Ayam Bawang (IDM-KAB) cenderung mendominasi penjualan."
   },
   {
     "id": "pos_034",
@@ -509,7 +542,8 @@
       "transactions",
       "users",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total revenue per kasir di bulan April 2026 menampilkan nama kasir, nama toko, total revenue, dan jumlah transaksi selesai, diurutkan dari revenue tertinggi."
   },
   {
     "id": "pos_035",
@@ -523,7 +557,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "Metode pembayaran yang tersedia: cash dan qris. Tampilan menunjukkan jumlah transaksi dan total nilai per metode pembayaran selama Maret–April 2026."
   },
   {
     "id": "pos_036",
@@ -542,7 +577,8 @@
       "product_variants",
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "Total penjualan per kategori di bulan April 2026 menampilkan nama kategori, total revenue, dan total qty, diurutkan dari revenue tertinggi. Kategori Makanan Ringan dan Minuman cenderung mendominasi."
   },
   {
     "id": "pos_037",
@@ -557,13 +593,14 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Rata-rata nilai transaksi per toko selama dua bulan menampilkan nama toko, rata-rata (pembulatan 2 desimal), dan total transaksi selesai. Salamart Dalangan cenderung memiliki rata-rata transaksi tertinggi."
   },
   {
     "id": "pos_038",
     "db_id": "pos_backend",
     "question": "Tampilkan stok tersedia (stok fisik dikurangi stok yang di-reserve) untuk setiap varian di toko Salamart Dalangan",
-    "query": "SELECT pv.sku, pv.name AS varian, inv.stock, inv.reserved_stock, (inv.stock - inv.reserved_stock) AS stok_tersedia, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' ORDER BY stok_tersedia ASC",
+    "query": "SELECT pv.sku, pv.name AS product_variant_name, (inv.stock - inv.reserved_stock) AS available_stock FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' ORDER BY available_stock ASC",
     "difficulty": "medium",
     "domain": "inventori",
     "edge_cases": [
@@ -574,13 +611,14 @@
       "product_variants",
       "shops"
     ],
-    "notes": "Stok tersedia = stock - reserved_stock, bukan stock saja"
+    "notes": "Stok tersedia = stock - reserved_stock, bukan stock saja",
+    "expected_answer": "Stok tersedia (stock - reserved_stock) per varian di Salamart Dalangan menampilkan SKU, nama varian, stok fisik, reserved stock, stok tersedia, dan low stock threshold, diurutkan dari stok tersedia paling sedikit."
   },
   {
     "id": "pos_039",
     "db_id": "pos_backend",
-    "question": "Tampilkan varian yang stoknya di bawah batas minimum di toko Cabang Depok",
-    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, inv.stock, inv.reserved_stock, (inv.stock - inv.reserved_stock) AS stok_tersedia, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND (inv.stock - inv.reserved_stock) < inv.low_stock_threshold ORDER BY stok_tersedia ASC",
+    "question": "Tampilkan varian yang stoknya di bawah batas minimum di toko Salamart Cikli",
+    "query": "SELECT pv.name AS variant_name, inv.stock, inv.low_stock_threshold FROM inventory inv JOIN product_variants pv ON inv.product_variant_id = pv.id JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND (inv.stock - inv.reserved_stock) < inv.low_stock_threshold ORDER BY inv.stock ASC",
     "difficulty": "medium",
     "domain": "inventori",
     "edge_cases": [
@@ -593,7 +631,8 @@
       "products",
       "shops"
     ],
-    "notes": "Perbandingan harus menggunakan stok tersedia (stock - reserved_stock) bukan stock saja"
+    "notes": "Perbandingan harus menggunakan stok tersedia (stock - reserved_stock) bukan stock saja",
+    "expected_answer": "Tidak ada varian di Salamart Cikli yang stok tersedianya (stock - reserved_stock) di bawah low_stock_threshold saat ini. Semua varian memiliki stok yang cukup tinggi di atas batas minimum masing-masing."
   },
   {
     "id": "pos_040",
@@ -608,7 +647,8 @@
     "tables_used": [
       "transactions",
       "customers"
-    ]
+    ],
+    "expected_answer": "10 pelanggan dengan total nilai pembelian tertinggi selama dua bulan menampilkan nama pelanggan, nomor telepon, total pembelian, dan jumlah transaksi, diurutkan dari total pembelian terbesar."
   },
   {
     "id": "pos_041",
@@ -624,13 +664,14 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Jumlah transaksi dan total penjualan per hari di bulan Maret 2026 untuk Salamart Dalangan menampilkan tanggal, jumlah transaksi, dan total penjualan harian, diurutkan berdasarkan tanggal."
   },
   {
     "id": "pos_042",
     "db_id": "pos_backend",
     "question": "Berapa total nilai refund yang telah disetujui per toko?",
-    "query": "SELECT s.name AS toko, SUM(r.total_amount) AS total_refund, COUNT(r.id) AS jumlah_refund FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN shops s ON t.shop_id = s.id WHERE r.status = 'approved' GROUP BY s.id, s.name ORDER BY total_refund DESC",
+    "query": "SELECT s.name AS shop_name, SUM(r.total_amount) AS total_refund_approved FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN shops s ON t.shop_id = s.id WHERE r.status = 'approved' GROUP BY s.id, s.name ORDER BY total_refund_approved DESC",
     "difficulty": "medium",
     "domain": "refund",
     "edge_cases": [
@@ -640,7 +681,8 @@
       "refunds",
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total nilai refund yang disetujui per toko menampilkan nama toko, total nilai refund, dan jumlah refund, diurutkan dari total refund terbesar."
   },
   {
     "id": "pos_043",
@@ -657,7 +699,8 @@
       "transfers",
       "shops",
       "transfer_items"
-    ]
+    ],
+    "expected_answer": "Transfer yang disetujui beserta total qty: menampilkan ID transfer, toko asal, toko tujuan, total qty barang, catatan, dan waktu konfirmasi. Total ada 6 transfer approved."
   },
   {
     "id": "pos_044",
@@ -673,7 +716,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Perbandingan pendapatan Maret vs April per toko dalam satu baris: nama toko, penjualan_maret, dan penjualan_april dalam satu query menggunakan CASE WHEN."
   },
   {
     "id": "pos_045",
@@ -688,7 +732,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Jumlah transaksi per metode pembayaran (cash/qris) untuk setiap toko, diurutkan per toko lalu jumlah transaksi menurun."
   },
   {
     "id": "pos_046",
@@ -704,7 +749,8 @@
     "tables_used": [
       "transactions",
       "customers"
-    ]
+    ],
+    "expected_answer": "5 pelanggan yang paling sering bertransaksi di bulan April 2026 menampilkan nama pelanggan, jumlah transaksi, dan total belanja, diurutkan dari jumlah transaksi terbanyak."
   },
   {
     "id": "pos_047",
@@ -721,7 +767,8 @@
       "transactions",
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Varian dengan total qty terjual tertinggi sepanjang Maret–April menampilkan SKU, nama varian, nama produk, total qty, dan total revenue, diurutkan dari qty terjual terbanyak."
   },
   {
     "id": "pos_048",
@@ -737,7 +784,8 @@
       "transactions",
       "transaction_items",
       "shops"
-    ]
+    ],
+    "expected_answer": "Rata-rata jumlah jenis item per transaksi di setiap toko menampilkan nama toko dan rata-rata item per transaksi (2 desimal), diurutkan dari rata-rata tertinggi."
   },
   {
     "id": "pos_049",
@@ -755,7 +803,8 @@
       "product_variants",
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "Kategori dengan revenue tertinggi sepanjang Maret–April menampilkan nama kategori, total revenue, dan total qty, diurutkan dari revenue tertinggi."
   },
   {
     "id": "pos_050",
@@ -771,7 +820,8 @@
       "transfers",
       "shops",
       "transfer_items"
-    ]
+    ],
+    "expected_answer": "Toko yang paling banyak menerima transfer approved menampilkan nama toko, jumlah transfer masuk, dan total qty masuk. Salamart Pengasih dan Salamart Cikli paling sering menerima transfer."
   },
   {
     "id": "pos_051",
@@ -788,7 +838,8 @@
       "transfers",
       "shops",
       "transfer_items"
-    ]
+    ],
+    "expected_answer": "Toko yang paling banyak mengirim transfer approved menampilkan nama toko, jumlah transfer keluar, dan total qty keluar. Salamart Dalangan paling sering mengirim transfer."
   },
   {
     "id": "pos_052",
@@ -801,13 +852,14 @@
     "tables_used": [
       "inventory",
       "shops"
-    ]
+    ],
+    "expected_answer": "Nilai total stok saat ini (stok × avg_cost_price) per toko menampilkan nama toko dan total nilai stok, diurutkan dari nilai stok terbesar."
   },
   {
     "id": "pos_053",
     "db_id": "pos_backend",
     "question": "Tampilkan varian produk yang belum pernah di-refund",
-    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.id NOT IN (SELECT DISTINCT ti.product_variant_id FROM refund_items ri JOIN transaction_items ti ON ri.transaction_item_id = ti.id) ORDER BY p.name, pv.name",
+    "query": "SELECT DISTINCT pv.id, pv.name FROM product_variants pv JOIN transaction_items ti ON pv.id = ti.product_variant_id WHERE pv.id NOT IN (SELECT DISTINCT ti2.product_variant_id FROM refund_items ri JOIN transaction_items ti2 ON ri.transaction_item_id = ti2.id) ORDER BY pv.name",
     "difficulty": "medium",
     "domain": "refund",
     "edge_cases": [
@@ -818,7 +870,8 @@
       "products",
       "refund_items",
       "transaction_items"
-    ]
+    ],
+    "expected_answer": "Terdapat 2 varian yang belum pernah di-refund: PTN-SS170 (Pantene Smooth & Shiny 170ml) dan PTN-DC290 (Pantene Damage Care 290ml). Kedua varian ini adalah produk kebersihan low-demand."
   },
   {
     "id": "pos_054",
@@ -835,7 +888,8 @@
       "transactions",
       "users",
       "shops"
-    ]
+    ],
+    "expected_answer": "Kasir dengan jumlah transaksi terbanyak selama dua bulan menampilkan nama kasir, nama toko, jumlah transaksi, dan total penjualan, diurutkan dari jumlah transaksi terbanyak."
   },
   {
     "id": "pos_055",
@@ -852,7 +906,8 @@
       "transfers",
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Total qty yang ditransfer per varian pada transfer approved selama Maret–April menampilkan SKU, nama varian, nama produk, dan total qty transfer, diurutkan dari qty tertinggi."
   },
   {
     "id": "pos_056",
@@ -868,7 +923,8 @@
     "tables_used": [
       "transactions"
     ],
-    "notes": "customer_id IS NULL berarti walk-in"
+    "notes": "customer_id IS NULL berarti walk-in",
+    "expected_answer": "Persentase transaksi walk-in dibandingkan total transaksi menampilkan jumlah walk-in, jumlah dengan pelanggan, total, dan persentase walk-in (2 desimal)."
   },
   {
     "id": "pos_057",
@@ -883,7 +939,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "5 hari dengan total penjualan tertinggi di bulan April 2026 menampilkan tanggal, total penjualan, dan jumlah transaksi, diurutkan dari total penjualan terbesar."
   },
   {
     "id": "pos_058",
@@ -899,7 +956,8 @@
       "refunds",
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Rata-rata nilai refund approved per toko menampilkan nama toko, rata-rata nilai refund (2 desimal), dan jumlah refund, diurutkan dari rata-rata tertinggi."
   },
   {
     "id": "pos_059",
@@ -914,7 +972,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "Total penjualan per minggu di bulan Maret 2026 menampilkan minggu (DATE_TRUNC), total penjualan, dan jumlah transaksi, diurutkan berdasarkan minggu."
   },
   {
     "id": "pos_060",
@@ -932,7 +991,8 @@
       "transactions",
       "shops"
     ],
-    "notes": "cost_price di transaction_items adalah snapshot harga beli saat transaksi"
+    "notes": "cost_price di transaction_items adalah snapshot harga beli saat transaksi",
+    "expected_answer": "Gross profit (revenue dikurangi COGS) per toko selama dua bulan menampilkan nama toko, total revenue, total COGS, dan gross profit, diurutkan dari gross profit terbesar."
   },
   {
     "id": "pos_061",
@@ -948,7 +1008,8 @@
     "tables_used": [
       "transactions",
       "customers"
-    ]
+    ],
+    "expected_answer": "Semua 60 pelanggan terdaftar memiliki lebih dari 15 transaksi selama Maret–April 2026. Hal ini karena volume transaksi sangat tinggi (ribuan transaksi) dan pelanggan dipilih secara round-robin dalam simulasi."
   },
   {
     "id": "pos_062",
@@ -964,7 +1025,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Toko dengan rata-rata nilai transaksi tertinggi di bulan April 2026 menampilkan nama toko dan rata-rata transaksi (2 desimal), diurutkan dari rata-rata tertinggi."
   },
   {
     "id": "pos_063",
@@ -979,7 +1041,8 @@
       "transaction_items",
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Varian yang paling sering di-refund berdasarkan total qty refund menampilkan SKU, nama varian, nama produk, dan total qty refund, diurutkan dari qty refund terbanyak."
   },
   {
     "id": "pos_064",
@@ -996,7 +1059,8 @@
       "transaction_items",
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total COGS per toko di bulan April 2026 menampilkan nama toko dan total COGS (cost_price × qty per transaction_item), diurutkan dari total COGS terbesar."
   },
   {
     "id": "pos_065",
@@ -1013,7 +1077,8 @@
       "product_variants",
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "Varian dengan harga jual tertinggi di setiap kategori menggunakan correlated subquery, menampilkan kategori, SKU, nama varian, dan harga, diurutkan dari harga tertinggi."
   },
   {
     "id": "pos_066",
@@ -1027,7 +1092,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "Distribusi jumlah transaksi per jam (0–23 UTC) menampilkan jam dan jumlah transaksi, diurutkan berdasarkan jam."
   },
   {
     "id": "pos_067",
@@ -1045,7 +1111,8 @@
       "transactions",
       "customers",
       "shops"
-    ]
+    ],
+    "expected_answer": "Semua 60 pelanggan terdaftar pernah bertransaksi di lebih dari satu toko. Distribusi pelanggan lintas toko sangat merata karena pola pemilihan pelanggan dalam simulasi menyebarkan transaksi ke ketiga toko."
   },
   {
     "id": "pos_068",
@@ -1062,12 +1129,13 @@
       "transactions",
       "users",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total nilai penjualan masing-masing kasir di Salamart Dalangan selama dua bulan menampilkan nama kasir, total penjualan, dan jumlah transaksi, diurutkan dari total penjualan terbesar."
   },
   {
     "id": "pos_069",
     "db_id": "pos_backend",
-    "question": "Tampilkan semua transfer yang melibatkan toko Cabang Bekasi baik sebagai pengirim maupun penerima",
+    "question": "Tampilkan semua transfer yang melibatkan toko Salamart Pengasih baik sebagai pengirim maupun penerima",
     "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, tf.status, tf.note, tf.created_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE fs.name = 'Salamart Pengasih' OR ts.name = 'Salamart Pengasih' ORDER BY tf.created_at",
     "difficulty": "medium",
     "domain": "transfer",
@@ -1078,12 +1146,13 @@
     "tables_used": [
       "transfers",
       "shops"
-    ]
+    ],
+    "expected_answer": "Transfer yang melibatkan Salamart Pengasih (baik pengirim maupun penerima) menampilkan ID transfer, toko asal, toko tujuan, status, catatan, dan waktu pembuatan."
   },
   {
     "id": "pos_070",
     "db_id": "pos_backend",
-    "question": "Berapa jumlah varian produk yang tersedia (stok > 0) di toko Cabang Bekasi?",
+    "question": "Berapa jumlah varian produk yang tersedia (stok > 0) di toko Salamart Pengasih?",
     "query": "SELECT COUNT(DISTINCT inv.product_variant_id) AS jumlah_varian FROM inventory inv JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Pengasih' AND inv.stock > 0",
     "difficulty": "medium",
     "domain": "inventori",
@@ -1093,7 +1162,8 @@
     "tables_used": [
       "inventory",
       "shops"
-    ]
+    ],
+    "expected_answer": "Jumlah varian produk yang tersedia (stok > 0) di Salamart Pengasih adalah 14 varian."
   },
   {
     "id": "pos_071",
@@ -1112,7 +1182,8 @@
       "products",
       "transaction_items",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Semua 23 varian produk aktif pernah terjual setidaknya satu kali selama periode Maret–April 2026. Tidak ada varian yang tidak pernah terjual sama sekali, termasuk varian low-demand seperti PTN-DC290."
   },
   {
     "id": "pos_072",
@@ -1130,7 +1201,8 @@
       "product_variants",
       "shops",
       "stock_movements"
-    ]
+    ],
+    "expected_answer": "Dengan kondisi stok saat ini yang cukup tinggi, tidak ada varian yang diperkirakan habis dalam 7 hari ke depan berdasarkan rata-rata penjualan harian bulan April."
   },
   {
     "id": "pos_073",
@@ -1147,7 +1219,8 @@
     "tables_used": [
       "customers",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Tidak ada pelanggan yang hanya bertransaksi di Maret tanpa bertransaksi di April. Semua pelanggan yang aktif di Maret juga aktif di April karena volume transaksi yang tinggi di kedua bulan."
   },
   {
     "id": "pos_074",
@@ -1164,12 +1237,13 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Toko dengan pertumbuhan penjualan tertinggi dari Maret ke April menampilkan nama toko, penjualan Maret, penjualan April, dan persentase pertumbuhan, diurutkan dari pertumbuhan tertinggi."
   },
   {
     "id": "pos_075",
     "db_id": "pos_backend",
-    "question": "Varian produk mana yang ada di inventory toko Pusat tapi tidak tersedia di toko Bekasi?",
+    "question": "Varian produk mana yang ada di inventory toko Salamart Dalangan tapi tidak tersedia di toko Salamart Pengasih?",
     "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk FROM product_variants pv JOIN products p ON pv.product_id = p.id WHERE pv.id IN (SELECT inv.product_variant_id FROM inventory inv JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND inv.stock > 0) AND pv.id NOT IN (SELECT inv.product_variant_id FROM inventory inv JOIN shops s ON inv.shop_id = s.id WHERE s.name = 'Salamart Pengasih') ORDER BY p.name, pv.name",
     "difficulty": "hard",
     "domain": "inventori",
@@ -1182,7 +1256,8 @@
       "products",
       "inventory",
       "shops"
-    ]
+    ],
+    "expected_answer": "Terdapat 9 varian di inventory Salamart Dalangan (stok > 0) yang tidak ada di inventory Salamart Pengasih: AQU-1500 (Aqua Botol 1500ml), TBS-1000 (Teh Botol Sosro 1 Liter), PCS-500 (Pocari Sweat 500ml), CHT-JB68 (Chitato Jagung Bakar 68g), ORO-133 (Oreo Original 133g), BRS-10KG (Beras Premium 10kg), MGT-2L (Minyak Goreng Tropical 2 Liter), FFF-PT200 (Frisian Flag Putih 200ml), dan PTN-SS170 (Pantene Smooth & Shiny 170ml)."
   },
   {
     "id": "pos_076",
@@ -1198,7 +1273,8 @@
       "transactions",
       "transaction_items",
       "shops"
-    ]
+    ],
+    "expected_answer": "5 transaksi dengan jumlah jenis varian item terbanyak menampilkan nomor invoice, toko, jumlah jenis varian, total qty, subtotal, dan waktu pembayaran."
   },
   {
     "id": "pos_077",
@@ -1215,7 +1291,8 @@
       "product_variants",
       "transaction_items",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Produk yang dijual di semua 3 toko vs sebagian toko menampilkan nama produk, jumlah toko yang menjual, dan label 'Semua Toko'/'Sebagian Toko'."
   },
   {
     "id": "pos_078",
@@ -1231,7 +1308,8 @@
     "tables_used": [
       "refunds",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Refund yang nilainya lebih dari 50% dari nilai transaksi aslinya (approved) menampilkan refund ID, nomor invoice, nilai transaksi, nilai refund, dan persentase refund."
   },
   {
     "id": "pos_079",
@@ -1250,7 +1328,8 @@
       "transactions",
       "users",
       "shops"
-    ]
+    ],
+    "expected_answer": "Kasir dengan rata-rata nilai transaksi di atas rata-rata keseluruhan menampilkan nama kasir, toko, dan rata-rata transaksi, diurutkan dari rata-rata tertinggi."
   },
   {
     "id": "pos_080",
@@ -1266,7 +1345,8 @@
     "tables_used": [
       "customers",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Pelanggan yang total belanjanya turun dari Maret ke April menampilkan nama pelanggan, total belanja Maret, dan total belanja April, diurutkan dari selisih penurunan terbesar."
   },
   {
     "id": "pos_081",
@@ -1286,13 +1366,14 @@
       "transfers",
       "transaction_items",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Varian yang pernah ditransfer (approved) tapi tidak pernah terjual menampilkan SKU, nama varian, dan nama produk."
   },
   {
     "id": "pos_082",
     "db_id": "pos_backend",
     "question": "Tampilkan 10 varian dengan total pergerakan stok (jumlah movement) terbanyak",
-    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, COUNT(sm.id) AS jumlah_movement, SUM(ABS(sm.qty)) AS total_qty_bergerak FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY jumlah_movement DESC LIMIT 10",
+    "query": "SELECT pv.name, COUNT(sm.id) AS total_movement FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id GROUP BY pv.id, pv.name ORDER BY total_movement DESC LIMIT 10",
     "difficulty": "hard",
     "domain": "audit",
     "edge_cases": [],
@@ -1300,7 +1381,8 @@
       "stock_movements",
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "10 varian dengan jumlah movement stok terbanyak menampilkan SKU, nama varian, nama produk, jumlah movement, dan total qty bergerak."
   },
   {
     "id": "pos_083",
@@ -1318,7 +1400,8 @@
       "transactions",
       "shops",
       "refunds"
-    ]
+    ],
+    "expected_answer": "Toko dengan rasio nilai refund approved tertinggi dibanding total penjualan selesai menampilkan nama toko, total penjualan, total refund, dan persentase rasio refund."
   },
   {
     "id": "pos_084",
@@ -1333,7 +1416,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Perbandingan penjualan hari kerja (Senin–Jumat) vs akhir pekan per toko menggunakan EXTRACT(DOW), menampilkan nama toko, penjualan weekday, dan penjualan weekend."
   },
   {
     "id": "pos_085",
@@ -1350,7 +1434,8 @@
       "product_variants",
       "products",
       "shops"
-    ]
+    ],
+    "expected_answer": "Tidak ada varian yang pernah mencapai stok 0 berdasarkan catatan stock_movements. Semua pergerakan stok selama simulasi tidak pernah menyebabkan stok turun hingga nol."
   },
   {
     "id": "pos_086",
@@ -1367,7 +1452,8 @@
       "transfers",
       "users"
     ],
-    "notes": "confirmed_by nullable pada transfer pending, hanya ada pada approved/rejected"
+    "notes": "confirmed_by nullable pada transfer pending, hanya ada pada approved/rejected",
+    "expected_answer": "Admin yang paling banyak menyetujui transfer (confirmed_by) menampilkan nama admin dan jumlah transfer yang disetujuinya."
   },
   {
     "id": "pos_087",
@@ -1386,12 +1472,13 @@
       "user_shops",
       "shops",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Semua kasir aktif memiliki transaksi di bulan April 2026. Tidak ada kasir yang tidak memiliki transaksi di bulan tersebut, termasuk kasir di toko kecil seperti Cikli dan Pengasih."
   },
   {
     "id": "pos_088",
     "db_id": "pos_backend",
-    "question": "Tampilkan 5 hari dengan selisih penjualan terbesar antara toko Pusat dan toko Depok",
+    "question": "Tampilkan 5 hari dengan selisih penjualan terbesar antara toko Salamart Dalangan dan toko Salamart Cikli",
     "query": "SELECT tanggal, pusat, depok, ABS(pusat - depok) AS selisih FROM (SELECT paid_at::date AS tanggal, SUM(CASE WHEN s.name = 'Salamart Dalangan' THEN t.subtotal ELSE 0 END) AS pusat, SUM(CASE WHEN s.name = 'Salamart Cikli' THEN t.subtotal ELSE 0 END) AS depok FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY paid_at::date) sub ORDER BY selisih DESC LIMIT 5",
     "difficulty": "hard",
     "domain": "penjualan",
@@ -1401,7 +1488,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "5 hari dengan selisih penjualan terbesar antara Salamart Dalangan dan Salamart Cikli menampilkan tanggal, penjualan Dalangan, penjualan Cikli, dan selisih absolut."
   },
   {
     "id": "pos_089",
@@ -1418,13 +1506,14 @@
     "tables_used": [
       "customers",
       "transactions"
-    ]
+    ],
+    "expected_answer": "Sebanyak 53 dari 60 pelanggan pernah bertransaksi di ketiga toko sekaligus. Hanya 7 pelanggan yang transaksinya belum mencakup semua toko."
   },
   {
     "id": "pos_090",
     "db_id": "pos_backend",
     "question": "Siapa yang melakukan restock terakhir untuk setiap varian di toko Salamart Dalangan?",
-    "query": "SELECT pv.sku, pv.name AS varian, u.name AS direstock_oleh, sm.qty AS qty_restock, sm.created_at FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN users u ON sm.user_id = u.id JOIN shops s ON sm.shop_id = s.id WHERE sm.type = 'restock' AND s.name = 'Salamart Dalangan' AND sm.created_at = (SELECT MAX(sm2.created_at) FROM stock_movements sm2 WHERE sm2.product_variant_id = sm.product_variant_id AND sm2.shop_id = sm.shop_id AND sm2.type = 'restock') ORDER BY pv.sku",
+    "query": "SELECT DISTINCT ON (sm.product_variant_id) u.name AS user_name, pv.name, sm.created_at AS last_restock_time FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN users u ON sm.user_id = u.id JOIN shops s ON sm.shop_id = s.id WHERE sm.type = 'restock' AND s.name = 'Salamart Dalangan' ORDER BY sm.product_variant_id, sm.created_at DESC",
     "difficulty": "hard",
     "domain": "audit",
     "edge_cases": [
@@ -1436,7 +1525,8 @@
       "product_variants",
       "users",
       "shops"
-    ]
+    ],
+    "expected_answer": "Siapa yang melakukan restock terakhir per varian di Salamart Dalangan menggunakan correlated subquery pada stock_movements tipe restock, menampilkan SKU, nama varian, nama user, qty restock, dan waktu."
   },
   {
     "id": "pos_091",
@@ -1455,7 +1545,8 @@
       "product_variants",
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "Ranking varian berdasarkan total revenue per kategori menggunakan RANK() OVER (PARTITION BY kategori), menampilkan kategori, SKU, nama varian, total revenue, dan ranking."
   },
   {
     "id": "pos_092",
@@ -1471,12 +1562,13 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Running total penjualan kumulatif per toko dari hari ke hari menggunakan SUM() OVER (PARTITION BY shop_id ORDER BY tanggal), menampilkan nama toko, tanggal, penjualan harian, dan penjualan kumulatif."
   },
   {
     "id": "pos_093",
     "db_id": "pos_backend",
-    "question": "Hari-hari mana di mana penjualan toko Pusat melebihi dua kali rata-rata harian toko Pusat?",
+    "question": "Hari-hari mana di mana penjualan toko Salamart Dalangan melebihi dua kali rata-rata harian toko Salamart Dalangan?",
     "query": "WITH daily AS (SELECT paid_at::date AS t_date, SUM(subtotal) AS daily_total FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND t.status = 'selesai' GROUP BY paid_at::date), avg_daily AS (SELECT AVG(daily_total) AS avg_total FROM daily) SELECT d.t_date, d.daily_total, ROUND(a.avg_total, 2) AS rata_rata_harian FROM daily d, avg_daily a WHERE d.daily_total > 2 * a.avg_total ORDER BY d.daily_total DESC",
     "difficulty": "extra_hard",
     "domain": "penjualan",
@@ -1488,7 +1580,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Hari-hari di mana penjualan harian Salamart Dalangan melebihi 2× rata-rata harian toko tersebut menggunakan CTE, menampilkan tanggal, total penjualan hari itu, dan rata-rata harian."
   },
   {
     "id": "pos_094",
@@ -1507,7 +1600,8 @@
       "transactions",
       "product_variants",
       "shops"
-    ]
+    ],
+    "expected_answer": "Top 3 varian terlaris per toko menggunakan ROW_NUMBER() OVER (PARTITION BY toko ORDER BY total_qty DESC), menampilkan toko, SKU, nama varian, dan total qty."
   },
   {
     "id": "pos_095",
@@ -1525,7 +1619,8 @@
       "transactions",
       "product_variants",
       "shops"
-    ]
+    ],
+    "expected_answer": "Persentase kontribusi revenue setiap varian terhadap total revenue tokonya menggunakan window function, menampilkan toko, SKU, nama varian, revenue varian, total revenue toko, dan persentase kontribusi."
   },
   {
     "id": "pos_096",
@@ -1544,7 +1639,8 @@
       "product_variants",
       "products",
       "categories"
-    ]
+    ],
+    "expected_answer": "Revenue per kategori sebagai persentase total revenue keseluruhan menggunakan SUM() OVER () (window tanpa partisi), menampilkan kategori, revenue, total revenue, dan persentase."
   },
   {
     "id": "pos_097",
@@ -1561,7 +1657,8 @@
       "stock_movements",
       "shops",
       "product_variants"
-    ]
+    ],
+    "expected_answer": "Volatilitas penjualan harian (standar deviasi qty) per varian per toko dari stock_movements tipe sale, menampilkan toko, SKU, nama varian, rata-rata harian, stddev, dan jumlah hari ada penjualan."
   },
   {
     "id": "pos_098",
@@ -1579,7 +1676,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Tren penjualan mingguan dengan perubahan persentase minggu ke minggu per toko menggunakan LAG() dan CTE, menampilkan toko, minggu, total penjualan, penjualan minggu sebelumnya, dan persentase perubahan."
   },
   {
     "id": "pos_099",
@@ -1595,7 +1693,8 @@
     ],
     "tables_used": [
       "transactions"
-    ]
+    ],
+    "expected_answer": "Semua 60 pelanggan pertama kali bertransaksi di bulan Maret 2026 karena simulasi dimulai pada 1 Maret 2026. Tidak ada pelanggan baru yang pertama kali muncul di bulan April."
   },
   {
     "id": "pos_100",
@@ -1612,7 +1711,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "5 transaksi bernilai tertinggi per toko menggunakan ROW_NUMBER() OVER (PARTITION BY toko ORDER BY subtotal DESC), menampilkan toko, nomor invoice, subtotal, dan paid_at."
   },
   {
     "id": "pos_101",
@@ -1628,12 +1728,13 @@
       "transaction_items",
       "product_variants",
       "products"
-    ]
+    ],
+    "expected_answer": "Produk yang paling sering dibeli bersama Indomie Goreng (SKU IDM-GRG) dalam satu transaksi menggunakan self-join transaction_items, menampilkan SKU, nama varian, nama produk, dan frekuensi co-occurrence."
   },
   {
     "id": "pos_102",
     "db_id": "pos_backend",
-    "question": "Tampilkan perubahan stok harian (net change) per varian di toko Pusat selama bulan April",
+    "question": "Tampilkan perubahan stok harian (net change) per varian di toko Salamart Dalangan selama bulan April",
     "query": "SELECT sm.created_at::date AS tanggal, pv.sku, pv.name AS varian, SUM(sm.qty) AS net_change_stok FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN shops s ON sm.shop_id = s.id WHERE s.name = 'Salamart Dalangan' AND sm.created_at >= '2026-04-01' AND sm.created_at < '2026-05-01' GROUP BY sm.created_at::date, pv.id, pv.sku, pv.name ORDER BY tanggal, pv.sku",
     "difficulty": "extra_hard",
     "domain": "audit",
@@ -1642,7 +1743,8 @@
       "stock_movements",
       "product_variants",
       "shops"
-    ]
+    ],
+    "expected_answer": "Perubahan stok harian (net change: SUM qty per hari) per varian di Salamart Dalangan selama April menampilkan tanggal, SKU, nama varian, dan net change stok."
   },
   {
     "id": "pos_103",
@@ -1656,7 +1758,8 @@
       "stock_movements",
       "product_variants",
       "shops"
-    ]
+    ],
+    "expected_answer": "Semua stock_movements untuk varian AQU-600 di semua toko secara kronologis menampilkan waktu, toko, tipe movement, qty, stok sebelum, stok sesudah, dan catatan."
   },
   {
     "id": "pos_104",
@@ -1673,7 +1776,8 @@
       "product_variants",
       "products",
       "shops"
-    ]
+    ],
+    "expected_answer": "Tidak ada varian yang avg_cost_price-nya lebih tinggi dari harga jualnya. Semua varian memiliki margin positif karena harga jual selalu ditetapkan di atas harga pokok."
   },
   {
     "id": "pos_105",
@@ -1690,7 +1794,8 @@
       "refunds",
       "transactions",
       "customers"
-    ]
+    ],
+    "expected_answer": "Pelanggan yang memiliki lebih dari satu refund approved menampilkan nama pelanggan, nomor telepon, jumlah refund, dan total nilai refund."
   },
   {
     "id": "pos_106",
@@ -1705,7 +1810,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Perbandingan jumlah transaksi cash vs qris per toko selama Maret–April 2026 menampilkan nama toko, metode pembayaran, jumlah transaksi, dan total nilai."
   },
   {
     "id": "pos_107",
@@ -1723,7 +1829,8 @@
       "shops",
       "transfer_items",
       "product_variants"
-    ]
+    ],
+    "expected_answer": "Estimasi nilai transfer pending berdasarkan harga varian saat ini menampilkan ID transfer, toko asal, toko tujuan, estimasi nilai (qty × price), dan waktu pembuatan."
   },
   {
     "id": "pos_108",
@@ -1741,12 +1848,13 @@
       "shops",
       "transfer_items",
       "product_variants"
-    ]
+    ],
+    "expected_answer": "Detail item dari transfer approved beserta SKU, nama varian, qty, harga, dan estimasi nilai (qty × price), diurutkan berdasarkan waktu konfirmasi."
   },
   {
     "id": "pos_109",
     "db_id": "pos_backend",
-    "question": "Tampilkan semua pergerakan stok masuk (refund, transfer_in, restock) di toko Cabang Bekasi",
+    "question": "Tampilkan semua pergerakan stok masuk (refund, transfer_in, restock) di toko Salamart Pengasih",
     "query": "SELECT sm.created_at::date AS tanggal, sm.type, pv.sku, pv.name AS varian, sm.qty, sm.stock_before, sm.stock_after FROM stock_movements sm JOIN product_variants pv ON sm.product_variant_id = pv.id JOIN shops s ON sm.shop_id = s.id WHERE s.name = 'Salamart Pengasih' AND sm.qty > 0 AND sm.type IN ('refund', 'transfer_in', 'restock') ORDER BY sm.created_at DESC",
     "difficulty": "medium",
     "domain": "audit",
@@ -1757,7 +1865,8 @@
       "stock_movements",
       "product_variants",
       "shops"
-    ]
+    ],
+    "expected_answer": "Pergerakan stok masuk (type IN ('refund','transfer_in','restock')) di Salamart Pengasih menampilkan tanggal, tipe, SKU, nama varian, qty, stok sebelum, dan stok sesudah."
   },
   {
     "id": "pos_110",
@@ -1772,12 +1881,13 @@
     "tables_used": [
       "transactions",
       "customers"
-    ]
+    ],
+    "expected_answer": "Rata-rata interval hari kunjungan untuk 5 pelanggan loyal (ID hardcoded) menampilkan nama pelanggan, total transaksi, tanggal pertama & terakhir, dan rata-rata interval hari (pembulatan 1 desimal)."
   },
   {
     "id": "pos_111",
     "db_id": "pos_backend",
-    "question": "Berapa jumlah transaksi per hari di bulan April untuk toko Cabang Bekasi?",
+    "question": "Berapa jumlah transaksi per hari di bulan April untuk toko Salamart Pengasih?",
     "query": "SELECT paid_at::date AS tanggal, COUNT(*) AS jumlah_transaksi, SUM(subtotal) AS total_penjualan FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Pengasih' AND t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' GROUP BY paid_at::date ORDER BY tanggal",
     "difficulty": "medium",
     "domain": "penjualan",
@@ -1788,7 +1898,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Jumlah transaksi per hari di bulan April di Salamart Pengasih menampilkan tanggal, jumlah transaksi, dan total penjualan harian, diurutkan berdasarkan tanggal."
   },
   {
     "id": "pos_112",
@@ -1804,7 +1915,8 @@
     "tables_used": [
       "transactions",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total penjualan QRIS per toko di bulan Maret 2026 menampilkan nama toko, jumlah transaksi qris, dan total nilai, diurutkan dari total nilai tertinggi."
   },
   {
     "id": "pos_113",
@@ -1821,12 +1933,13 @@
       "product_variants",
       "products",
       "shops"
-    ]
+    ],
+    "expected_answer": "Tidak ada varian yang reserved_stock-nya lebih dari 0. Seluruh stok inventory tersedia penuh karena sistem transfer tidak menggunakan mekanisme reserved_stock."
   },
   {
     "id": "pos_114",
     "db_id": "pos_backend",
-    "question": "Tampilkan semua transaksi beserta nama pelanggan di toko Cabang Depok di bulan April (termasuk walk-in)",
+    "question": "Tampilkan semua transaksi beserta nama pelanggan di toko Salamart Cikli di bulan April (termasuk walk-in)",
     "query": "SELECT t.invoice_no, COALESCE(c.name, 'Walk-in') AS pelanggan, t.subtotal, t.payment_method, t.paid_at FROM transactions t LEFT JOIN customers c ON t.customer_id = c.id JOIN shops s ON t.shop_id = s.id WHERE s.name = 'Salamart Cikli' AND t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-04-01' ORDER BY t.paid_at DESC",
     "difficulty": "medium",
     "domain": "penjualan",
@@ -1840,13 +1953,14 @@
       "customers",
       "shops"
     ],
-    "notes": "LEFT JOIN diperlukan agar transaksi walk-in (customer_id IS NULL) tetap tampil"
+    "notes": "LEFT JOIN diperlukan agar transaksi walk-in (customer_id IS NULL) tetap tampil",
+    "expected_answer": "Semua transaksi di Salamart Cikli bulan April termasuk walk-in menggunakan LEFT JOIN customers, menampilkan nomor invoice, nama pelanggan (COALESCE ke 'Walk-in'), subtotal, metode bayar, dan paid_at."
   },
   {
     "id": "pos_115",
     "db_id": "pos_backend",
     "question": "Tampilkan rata-rata harga jual snapshot vs harga jual varian saat ini untuk setiap varian",
-    "query": "SELECT pv.sku, pv.name AS varian, pv.price AS harga_saat_ini, ROUND(AVG(ti.price), 2) AS rata_harga_snapshot, ROUND(pv.price - AVG(ti.price), 2) AS selisih FROM transaction_items ti JOIN product_variants pv ON ti.product_variant_id = pv.id GROUP BY pv.id, pv.sku, pv.name, pv.price ORDER BY ABS(pv.price - AVG(ti.price)) DESC",
+    "query": "SELECT pv.name AS product_variant_name, pv.price AS current_selling_price, ROUND(AVG(ti.price), 2) AS avg_snapshot_selling_price FROM transaction_items ti JOIN product_variants pv ON ti.product_variant_id = pv.id GROUP BY pv.id, pv.name, pv.price ORDER BY ABS(pv.price - AVG(ti.price)) DESC",
     "difficulty": "hard",
     "domain": "produk",
     "edge_cases": [
@@ -1856,7 +1970,8 @@
       "transaction_items",
       "product_variants"
     ],
-    "notes": "transaction_items.price adalah snapshot harga saat transaksi, bisa berbeda dari harga varian saat ini"
+    "notes": "transaction_items.price adalah snapshot harga saat transaksi, bisa berbeda dari harga varian saat ini",
+    "expected_answer": "Rata-rata harga snapshot (dari transaction_items) vs harga jual varian saat ini menampilkan SKU, nama varian, harga saat ini, rata-rata harga snapshot, dan selisih, diurutkan dari selisih terbesar."
   },
   {
     "id": "pos_116",
@@ -1875,13 +1990,14 @@
       "product_variants",
       "products",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total qty semua varian Indomie terjual per toko di bulan April menampilkan nama toko, total qty, dan total revenue, diurutkan dari total qty tertinggi."
   },
   {
     "id": "pos_117",
     "db_id": "pos_backend",
     "question": "Tampilkan detail refund beserta nama kasir yang memprosesnya dan nomor invoice transaksi asal",
-    "query": "SELECT r.id AS refund_id, t.invoice_no, u.name AS diproses_oleh, r.total_amount, r.reason, r.status, r.created_at FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC",
+    "query": "SELECT r.id AS refund_id, u.name AS nama_kasir, t.invoice_no AS nomor_invoice_asal FROM refunds r JOIN transactions t ON r.transaction_id = t.id JOIN users u ON r.user_id = u.id ORDER BY r.created_at DESC",
     "difficulty": "medium",
     "domain": "refund",
     "edge_cases": [],
@@ -1889,7 +2005,8 @@
       "refunds",
       "transactions",
       "users"
-    ]
+    ],
+    "expected_answer": "Detail refund beserta nama kasir yang memprosesnya dan nomor invoice transaksi asal menampilkan refund ID, invoice, nama kasir, total amount, alasan, status, dan waktu pembuatan."
   },
   {
     "id": "pos_118",
@@ -1907,7 +2024,8 @@
       "transactions",
       "users",
       "shops"
-    ]
+    ],
+    "expected_answer": "Total penjualan kasir menggunakan LAG untuk membandingkan dengan kasir di atas dalam ranking, menampilkan nama kasir, toko, total penjualan, penjualan kasir di atasnya, dan selisih."
   },
   {
     "id": "pos_119",
@@ -1926,12 +2044,13 @@
       "transaction_items",
       "transactions",
       "product_variants"
-    ]
+    ],
+    "expected_answer": "Detail refund items yang sudah approved beserta informasi transaksi asal dan nama varian yang dikembalikan, menampilkan refund ID, invoice, SKU, nama varian, qty refund, nilai refund, alasan, dan waktu."
   },
   {
     "id": "pos_120",
     "db_id": "pos_backend",
-    "question": "Tampilkan produk Sembako dengan total penjualan dan sisa stok saat ini di toko Pusat",
+    "question": "Tampilkan produk Sembako dengan total penjualan dan sisa stok saat ini di toko Salamart Dalangan",
     "query": "SELECT p.name AS produk, pv.sku, pv.name AS varian, COALESCE(SUM(ti.qty), 0) AS total_terjual, inv.stock AS stok_saat_ini, (inv.stock - inv.reserved_stock) AS stok_tersedia FROM products p JOIN categories c ON p.category_id = c.id JOIN product_variants pv ON p.id = pv.product_id LEFT JOIN transaction_items ti ON pv.id = ti.product_variant_id LEFT JOIN transactions t ON ti.transaction_id = t.id AND t.status = 'selesai' JOIN inventory inv ON pv.id = inv.product_variant_id JOIN shops s ON inv.shop_id = s.id WHERE c.name = 'Sembako' AND s.name = 'Salamart Dalangan' GROUP BY p.name, pv.id, pv.sku, pv.name, inv.stock, inv.reserved_stock ORDER BY total_terjual DESC",
     "difficulty": "hard",
     "domain": "inventori",
@@ -1948,6 +2067,189 @@
       "transactions",
       "inventory",
       "shops"
-    ]
+    ],
+    "expected_answer": "Produk Sembako beserta total terjual dan sisa stok di Salamart Dalangan menggunakan LEFT JOIN agar produk tanpa transaksi tetap tampil, menampilkan nama produk, SKU, nama varian, total terjual, stok saat ini, dan stok tersedia."
+  },
+  {
+    "id": "pos_121",
+    "db_id": "pos_backend",
+    "question": "Berapa total transaksi yang diselesaikan di bulan Mei 2026?",
+    "query": "SELECT COUNT(*) AS total_transaksi FROM transactions WHERE status = 'selesai' AND DATE_TRUNC('month', paid_at) = '2026-05-01'",
+    "difficulty": "simple",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions"
+    ],
+    "notes": "paid_at dipakai karena menunjukkan waktu pembayaran terjadi",
+    "expected_answer": "Total transaksi yang diselesaikan di bulan Mei 2026 (periode 1–23 Mei) ditampilkan sebagai satu angka count berdasarkan kolom paid_at."
+  },
+  {
+    "id": "pos_122",
+    "db_id": "pos_backend",
+    "question": "Tampilkan semua restock stok yang dilakukan di bulan Mei 2026",
+    "query": "SELECT s.name AS toko, pv.sku, sm.qty AS qty_restock, sm.cost_price, sm.created_at FROM stock_movements sm JOIN shops s ON sm.shop_id = s.id JOIN product_variants pv ON sm.product_variant_id = pv.id WHERE sm.type = 'restock' AND DATE_TRUNC('month', sm.created_at) = '2026-05-01' ORDER BY sm.created_at, s.name",
+    "difficulty": "simple",
+    "domain": "inventori",
+    "edge_cases": [
+      "type_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "stock_movements",
+      "shops",
+      "product_variants"
+    ],
+    "expected_answer": "Restock stok di bulan Mei 2026 dilakukan pada 1 Mei 2026 di ketiga toko (Salamart Dalangan, Cikli, dan Pengasih) untuk berbagai varian. Ditampilkan nama toko, SKU, qty restock, cost price, dan waktu restock."
+  },
+  {
+    "id": "pos_123",
+    "db_id": "pos_backend",
+    "question": "Berapa total penjualan per toko di bulan Mei 2026?",
+    "query": "SELECT s.name AS toko, SUM(t.subtotal) AS total_penjualan, COUNT(t.id) AS jumlah_transaksi FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-05-01' GROUP BY s.id, s.name ORDER BY total_penjualan DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ],
+    "expected_answer": "Total penjualan per toko di bulan Mei 2026 menampilkan nama toko, total penjualan, dan jumlah transaksi selesai (periode 1–23 Mei), diurutkan dari total penjualan tertinggi."
+  },
+  {
+    "id": "pos_124",
+    "db_id": "pos_backend",
+    "question": "Tampilkan transfer stok yang terjadi di bulan Mei 2026 beserta statusnya",
+    "query": "SELECT tf.id, fs.name AS dari_toko, ts.name AS ke_toko, tf.status, tf.note, tf.created_at FROM transfers tf JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE DATE_TRUNC('month', tf.created_at) = '2026-05-01' ORDER BY tf.created_at",
+    "difficulty": "simple",
+    "domain": "transfer",
+    "edge_cases": [
+      "date_truncation",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfers",
+      "shops"
+    ],
+    "expected_answer": "Transfer stok di bulan Mei 2026 ada 2 transfer, keduanya approved: (1) Salamart Dalangan → Salamart Cikli (5 Mei, Indomie Goreng & Kuah Ayam Bawang); (2) Salamart Dalangan → Salamart Pengasih (15 Mei, Aqua Botol 600ml & Teh Botol Sosro 450ml)."
+  },
+  {
+    "id": "pos_125",
+    "db_id": "pos_backend",
+    "question": "Tampilkan 10 varian produk terlaris berdasarkan total qty terjual di bulan Mei 2026",
+    "query": "SELECT pv.sku, pv.name AS varian, p.name AS produk, SUM(ti.qty) AS total_qty FROM transaction_items ti JOIN transactions t ON ti.transaction_id = t.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id WHERE t.status = 'selesai' AND DATE_TRUNC('month', t.paid_at) = '2026-05-01' GROUP BY pv.id, pv.sku, pv.name, p.name ORDER BY total_qty DESC LIMIT 10",
+    "difficulty": "medium",
+    "domain": "produk",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transaction_items",
+      "transactions",
+      "product_variants",
+      "products"
+    ],
+    "notes": "transaction_items tidak punya timestamp, filter tanggal harus via JOIN ke transactions",
+    "expected_answer": "10 varian terlaris di bulan Mei 2026 berdasarkan total qty terjual menampilkan SKU, nama varian, nama produk, dan total qty. Indomie Goreng dan Aqua Botol 600ml cenderung mendominasi."
+  },
+  {
+    "id": "pos_126",
+    "db_id": "pos_backend",
+    "question": "Bandingkan total penjualan Maret, April, dan Mei 2026 per toko dalam satu baris",
+    "query": "SELECT s.name AS toko, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-03-01' THEN t.subtotal ELSE 0 END) AS penjualan_maret, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) AS penjualan_april, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-05-01' THEN t.subtotal ELSE 0 END) AS penjualan_mei FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY s.name",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ],
+    "expected_answer": "Perbandingan total penjualan tiga bulan per toko dalam satu baris menggunakan CASE WHEN, menampilkan nama toko, penjualan_maret, penjualan_april, dan penjualan_mei, diurutkan berdasarkan nama toko."
+  },
+  {
+    "id": "pos_127",
+    "db_id": "pos_backend",
+    "question": "Toko mana yang mengalami pertumbuhan penjualan tertinggi dari bulan April ke Mei 2026?",
+    "query": "SELECT s.name AS toko, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END) AS penjualan_april, SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-05-01' THEN t.subtotal ELSE 0 END) AS penjualan_mei, ROUND(100.0 * (SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-05-01' THEN t.subtotal ELSE 0 END) - SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END)) / NULLIF(SUM(CASE WHEN DATE_TRUNC('month', t.paid_at) = '2026-04-01' THEN t.subtotal ELSE 0 END), 0), 2) AS pertumbuhan_pct FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' GROUP BY s.id, s.name ORDER BY pertumbuhan_pct DESC",
+    "difficulty": "hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation",
+      "null_handling"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ],
+    "notes": "Mei hanya 23 hari sehingga perlu diinterpretasi dengan hati-hati saat membandingkan dengan April yang 30 hari penuh",
+    "expected_answer": "Toko dengan pertumbuhan penjualan tertinggi dari April ke Mei 2026 menampilkan nama toko, penjualan April, penjualan Mei, dan persentase pertumbuhan. Catatan: Mei hanya mencakup 23 hari sehingga perlu mempertimbangkan perbedaan jumlah hari."
+  },
+  {
+    "id": "pos_128",
+    "db_id": "pos_backend",
+    "question": "Tampilkan total nilai penjualan QRIS per toko di bulan Mei 2026",
+    "query": "SELECT s.name AS toko, COUNT(*) AS jumlah_transaksi, SUM(t.subtotal) AS total_nilai FROM transactions t JOIN shops s ON t.shop_id = s.id WHERE t.status = 'selesai' AND t.payment_method = 'qris' AND DATE_TRUNC('month', t.paid_at) = '2026-05-01' GROUP BY s.id, s.name ORDER BY total_nilai DESC",
+    "difficulty": "medium",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ],
+    "expected_answer": "Total penjualan QRIS per toko di bulan Mei 2026 menampilkan nama toko, jumlah transaksi QRIS, dan total nilai, diurutkan dari total nilai tertinggi."
+  },
+  {
+    "id": "pos_129",
+    "db_id": "pos_backend",
+    "question": "Tampilkan detail item transfer yang disetujui di bulan Mei 2026 beserta nama varian dan tokonya",
+    "query": "SELECT tf.id AS transfer_id, fs.name AS dari_toko, ts.name AS ke_toko, pv.sku, pv.name AS varian, p.name AS produk, ti.qty, tf.confirmed_at FROM transfer_items ti JOIN transfers tf ON ti.transfer_id = tf.id JOIN product_variants pv ON ti.product_variant_id = pv.id JOIN products p ON pv.product_id = p.id JOIN shops fs ON tf.from_shop_id = fs.id JOIN shops ts ON tf.to_shop_id = ts.id WHERE tf.status = 'approved' AND DATE_TRUNC('month', tf.created_at) = '2026-05-01' ORDER BY tf.confirmed_at, fs.name",
+    "difficulty": "medium",
+    "domain": "transfer",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation",
+      "self_join"
+    ],
+    "tables_used": [
+      "transfer_items",
+      "transfers",
+      "product_variants",
+      "products",
+      "shops"
+    ],
+    "expected_answer": "Detail item transfer approved di Mei 2026: (1) Dalangan→Cikli: Indomie Goreng 120 unit & Indomie Kuah Ayam Bawang 100 unit (5 Mei); (2) Dalangan→Pengasih: Aqua Botol 600ml 60 unit & Teh Botol Sosro 450ml 50 unit (15 Mei)."
+  },
+  {
+    "id": "pos_130",
+    "db_id": "pos_backend",
+    "question": "Tampilkan tren penjualan bulanan kumulatif Maret–Mei menggunakan running total per toko",
+    "query": "WITH monthly AS (SELECT t.shop_id, DATE_TRUNC('month', t.paid_at) AS bulan, SUM(t.subtotal) AS total_bulan FROM transactions t WHERE t.status = 'selesai' GROUP BY t.shop_id, DATE_TRUNC('month', t.paid_at)) SELECT s.name AS toko, bulan, total_bulan, SUM(total_bulan) OVER (PARTITION BY shop_id ORDER BY bulan) AS penjualan_kumulatif FROM monthly JOIN shops s ON monthly.shop_id = s.id ORDER BY s.name, bulan",
+    "difficulty": "extra_hard",
+    "domain": "penjualan",
+    "edge_cases": [
+      "status_filter",
+      "date_truncation",
+      "window_function",
+      "cte"
+    ],
+    "tables_used": [
+      "transactions",
+      "shops"
+    ],
+    "expected_answer": "Tren penjualan bulanan kumulatif per toko menggunakan CTE dan SUM() OVER (PARTITION BY toko ORDER BY bulan), menampilkan nama toko, bulan, total penjualan bulan itu, dan akumulasi penjualan dari Maret hingga bulan tersebut."
   }
 ]

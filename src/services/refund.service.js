@@ -80,12 +80,13 @@ exports.detail = async (refundId, shopId, userRole) => {
 
 // ─── create ───────────────────────────────────────────────────────────────────
 
-exports.create = async ({ transaction_id, reason, items }, userId, userRole, ctx = {}) => {
+exports.create = async ({ invoice_no, reason, items }, userId, userRole, ctx = {}) => {
   if (!items || items.length === 0)
     throw { status: 400, message: 'Refund harus memiliki minimal satu item' };
 
-  const trx = await Transaction.findByPk(transaction_id);
+  const trx = await Transaction.findOne({ where: { invoice_no } });
   if (!trx) throw { status: 404, message: 'Transaksi tidak ditemukan' };
+  const transaction_id = trx.id;
   if (trx.status !== 'selesai')
     throw { status: 400, message: 'Hanya transaksi yang sudah selesai yang bisa direfund' };
 

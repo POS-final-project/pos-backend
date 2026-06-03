@@ -19,6 +19,15 @@ exports.list = async (req, res) => {
   }
 };
 
+exports.findByInvoice = async (req, res) => {
+  try {
+    const data = await transactionService.findByInvoice(req.params.invoiceNo, req.shopId, req.user.role);
+    return success(res, data, 'Detail transaksi berhasil diambil');
+  } catch (err) {
+    return error(res, err.message, err.status || 500);
+  }
+};
+
 exports.detail = async (req, res) => {
   try {
     const data = await transactionService.detail(req.params.transactionId, req.shopId, req.user.role);

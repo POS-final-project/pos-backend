@@ -30,12 +30,12 @@ exports.detail = async (req, res) => {
 
 exports.create = async (req, res) => {
   try {
-    const { transaction_id, reason, items } = req.body;
-    if (!transaction_id || !items)
-      return error(res, 'transaction_id dan items wajib diisi', 400);
+    const { invoice_no, reason, items } = req.body;
+    if (!invoice_no || !items)
+      return error(res, 'invoice_no dan items wajib diisi', 400);
 
     const data = await refundService.create(
-      { transaction_id, reason, items },
+      { invoice_no, reason, items },
       req.user.id,
       req.user.role,
       makeCtx(req),

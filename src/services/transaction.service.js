@@ -57,6 +57,23 @@ exports.list = async (query, shopId, userRole) => {
   return { data: rows, meta: getMeta(count, page, limit) };
 };
 
+// ─── findByInvoice ────────────────────────────────────────────────────────────
+
+exports.findByInvoice = async (invoiceNo, shopId, userRole) => {
+  const trx = await Transaction.findOne({
+    where: { invoice_no: invoiceNo },
+    include: [...TRX_INCLUDE, { model: TransactionItem, as: 'items', include: ITEM_INCLUDE }],
+  });
+
+  if (!trx) throw { status: 404, message: 'Transaksi tidak ditemukan' };
+
+  if (userRole !== 'superAdmin' && trx.shop_id !== shopId) {
+    throw { status: 403, message: 'Akses ke transaksi ini tidak diizinkan' };
+  }
+
+  return trx;
+};
+
 // ─── detail ───────────────────────────────────────────────────────────────────
 
 exports.detail = async (transactionId, shopId, userRole) => {
