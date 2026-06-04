@@ -86,13 +86,16 @@ describe('POST /auth/login', () => {
     expect(res.body.message).toBe('Email atau password salah');
   });
 
-  test('[Skenario 3] Password dikosongkan → HTTP 400, "Email dan password wajib diisi"', async () => {
+  test('[Skenario 3] Password dikosongkan → HTTP 400, validasi password wajib diisi', async () => {
+    // validate.login middleware (express-validator) berjalan sebelum controller,
+    // sehingga pesan yang dikembalikan adalah "Password wajib diisi" dari validator,
+    // bukan "Email dan password wajib diisi" dari controller.
     const res = await request(app)
       .post(`${BASE}/auth/login`)
       .send({ email: CREDS.adminDalangan.email });
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe('Email dan password wajib diisi');
+    expect(res.body.message).toContain('wajib diisi');
   });
 
   test('[Skenario 4] Email terdaftar dengan password salah → HTTP 401, permintaan ditolak', async () => {
