@@ -31,7 +31,7 @@ exports.byProduct = async (req, res) => {
 exports.restock = async (req, res) => {
   try {
     const { shop_id, product_variant_id, qty, cost_price, note } = req.body;
-    if (!shop_id || !product_variant_id || !qty) return error(res, 'shop_id, product_variant_id, qty wajib diisi', 400);
+    if (!shop_id || !product_variant_id || qty == null || qty === '') return error(res, 'shop_id, product_variant_id, qty wajib diisi', 400);
     if (qty <= 0) return error(res, 'qty harus lebih dari 0', 400);
 
     if (req.user.role !== 'superAdmin') {
@@ -54,7 +54,7 @@ exports.restock = async (req, res) => {
 exports.adjustOut = async (req, res) => {
   try {
     const { shop_id, product_variant_id, qty, note } = req.body;
-    if (!shop_id || !product_variant_id || !qty) return error(res, 'shop_id, product_variant_id, qty wajib diisi', 400);
+    if (!shop_id || !product_variant_id || qty == null || qty === '') return error(res, 'shop_id, product_variant_id, qty wajib diisi', 400);
     if (qty <= 0) return error(res, 'qty harus lebih dari 0', 400);
 
     if (req.user.role !== 'superAdmin') {

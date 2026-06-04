@@ -488,7 +488,8 @@ describe('POST /ai/sessions/:id/chat', () => {
       .send({ message: 'Berapa total penjualan bulan Maret 2026?' });
 
     expect(res.status).toBe(200);
-    expect(res.body.data).toHaveProperty('answer');
+    // AI service mengembalikan field "reply" (teks jawaban)
+    expect(res.body.data).toHaveProperty('reply');
   }, 60000);
 
   test('[Skenario 30] Pertanyaan umum (tidak perlu data DB) → HTTP 200, jawaban langsung tanpa query SQL', async () => {
@@ -502,6 +503,8 @@ describe('POST /ai/sessions/:id/chat', () => {
       .send({ message: 'Apa itu sistem Point of Sale?' });
 
     expect(res.status).toBe(200);
-    expect(res.body.data).toHaveProperty('answer');
+    // AI service mengembalikan field "reply" (teks jawaban) dan "used_sql": false
+    expect(res.body.data).toHaveProperty('reply');
+    expect(res.body.data.used_sql).toBe(false);
   }, 60000);
 });
