@@ -30,8 +30,12 @@ exports.detail = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const { name, phone, role, is_active } = req.body;
-    const data = await userService.update(req.params.userId, { name, phone, role, is_active }, makeCtx(req));
+    const { name, phone, role, is_active, shopId } = req.body;
+    const data = await userService.update(
+      req.params.userId,
+      { name, phone, role, is_active, shopId: shopId !== undefined ? (shopId || null) : undefined },
+      makeCtx(req),
+    );
     return success(res, data, 'User berhasil diperbarui');
   } catch (err) {
     return error(res, err.message, err.status || 500);

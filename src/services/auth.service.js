@@ -54,12 +54,14 @@ exports.registerAdmin = async ({ name, email, password, shopId }, ctx = {}) => {
   const existing = await User.findOne({ where: { email } });
   if (existing) throw { status: 409, message: 'Email sudah digunakan' };
 
-  const shop = await Shop.findByPk(shopId);
-  if (!shop) throw { status: 404, message: 'Toko tidak ditemukan' };
+  if (shopId) {
+    const shop = await Shop.findByPk(shopId);
+    if (!shop) throw { status: 404, message: 'Toko tidak ditemukan' };
+  }
 
   const hashed = await bcrypt.hash(password, 10);
   const user = await User.create({ name, email, password: hashed, role: 'admin' });
-  await UserShop.create({ user_id: user.id, shop_id: shopId });
+  if (shopId) await UserShop.create({ user_id: user.id, shop_id: shopId });
 
   await auditLogService.log({
     userId: ctx.userId,
@@ -76,7 +78,7 @@ exports.registerAdmin = async ({ name, email, password, shopId }, ctx = {}) => {
 };
 
 exports.registerUser = async ({ name, email, password, shopId }, requester, ctx = {}) => {
-  if (requester.role === 'admin') {
+  if (requester.role === 'admin' && shopId) {
     const assignment = await UserShop.findOne({ where: { user_id: requester.id, shop_id: shopId } });
     if (!assignment) throw { status: 403, message: 'Anda tidak bisa mendaftarkan user ke toko lain' };
   }
@@ -84,12 +86,14 @@ exports.registerUser = async ({ name, email, password, shopId }, requester, ctx 
   const existing = await User.findOne({ where: { email } });
   if (existing) throw { status: 409, message: 'Email sudah digunakan' };
 
-  const shop = await Shop.findByPk(shopId);
-  if (!shop) throw { status: 404, message: 'Toko tidak ditemukan' };
+  if (shopId) {
+    const shop = await Shop.findByPk(shopId);
+    if (!shop) throw { status: 404, message: 'Toko tidak ditemukan' };
+  }
 
   const hashed = await bcrypt.hash(password, 10);
   const user = await User.create({ name, email, password: hashed, role: 'user' });
-  await UserShop.create({ user_id: user.id, shop_id: shopId });
+  if (shopId) await UserShop.create({ user_id: user.id, shop_id: shopId });
 
   await auditLogService.log({
     userId: requester.id,

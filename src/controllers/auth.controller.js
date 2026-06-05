@@ -39,8 +39,8 @@ exports.logout = (req, res) => {
 exports.registerAdmin = async (req, res) => {
   try {
     const { name, email, password, shopId } = req.body;
-    if (!name || !email || !password || !shopId) return error(res, 'name, email, password, shopId wajib diisi', 400);
-    const data = await authService.registerAdmin({ name, email, password, shopId }, makeCtx(req));
+    if (!name || !email || !password) return error(res, 'name, email, password wajib diisi', 400);
+    const data = await authService.registerAdmin({ name, email, password, shopId: shopId || null }, makeCtx(req));
     return success(res, data, 'Admin berhasil didaftarkan', 201);
   } catch (err) {
     return error(res, err.message, err.status || 500);
@@ -50,8 +50,8 @@ exports.registerAdmin = async (req, res) => {
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, shopId } = req.body;
-    if (!name || !email || !password || !shopId) return error(res, 'name, email, password, shopId wajib diisi', 400);
-    const data = await authService.registerUser({ name, email, password, shopId }, req.user, makeCtx(req));
+    if (!name || !email || !password) return error(res, 'name, email, password wajib diisi', 400);
+    const data = await authService.registerUser({ name, email, password, shopId: shopId || null }, req.user, makeCtx(req));
     return success(res, data, 'User berhasil didaftarkan', 201);
   } catch (err) {
     return error(res, err.message, err.status || 500);

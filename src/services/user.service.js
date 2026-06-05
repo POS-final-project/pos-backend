@@ -1,7 +1,7 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { User } = require('../models');
+const { User, UserShop } = require('../models');
 const { getPagination, getMeta } = require('../utils/pagination');
 const auditLogService = require('./auditLog.service');
 
@@ -23,20 +23,36 @@ exports.list = async (query) => {
   const { count, rows } = await User.findAndCountAll({
     where,
     attributes: SAFE_ATTRS,
+    include: [{ model: UserShop, attributes: ['shop_id'] }],
     limit,
     offset,
     order: [['name', 'ASC']],
+    distinct: true,
   });
-  return { data: rows, meta: getMeta(count, page, limit) };
+
+  const data = rows.map((u) => {
+    const plain = u.toJSON();
+    plain.shopId = plain.UserShops?.[0]?.shop_id ?? null;
+    delete plain.UserShops;
+    return plain;
+  });
+
+  return { data, meta: getMeta(count, page, limit) };
 };
 
 exports.detail = async (userId) => {
-  const user = await User.findByPk(userId, { attributes: SAFE_ATTRS });
+  const user = await User.findByPk(userId, {
+    attributes: SAFE_ATTRS,
+    include: [{ model: UserShop, attributes: ['shop_id'] }],
+  });
   if (!user) throw { status: 404, message: 'User tidak ditemukan' };
-  return user;
+  const plain = user.toJSON();
+  plain.shopId = plain.UserShops?.[0]?.shop_id ?? null;
+  delete plain.UserShops;
+  return plain;
 };
 
-exports.update = async (userId, { name, phone, role, is_active }, ctx = {}) => {
+exports.update = async (userId, { name, phone, role, is_active, shopId }, ctx = {}) => {
   const user = await User.findByPk(userId);
   if (!user) throw { status: 404, message: 'User tidak ditemukan' };
 
@@ -49,17 +65,22 @@ exports.update = async (userId, { name, phone, role, is_active }, ctx = {}) => {
   const oldValues = { name: user.name, phone: user.phone, role: user.role, is_active: user.is_active };
   await user.update(updates);
 
+  if (shopId !== undefined) {
+    await UserShop.destroy({ where: { user_id: userId } });
+    if (shopId) await UserShop.create({ user_id: userId, shop_id: shopId });
+  }
+
   await auditLogService.log({
     userId: ctx.userId,
-    shopId: null,
+    shopId: shopId ?? null,
     entityType: 'user',
     entityId: userId,
     action: 'update',
     oldValues,
-    newValues: updates,
+    newValues: { ...updates, ...(shopId !== undefined ? { shopId } : {}) },
     ipAddress: ctx.ip,
     userAgent: ctx.userAgent,
   });
 
-  return user.reload({ attributes: SAFE_ATTRS });
+  return exports.detail(userId);
 };

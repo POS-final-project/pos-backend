@@ -15,7 +15,9 @@ function handleValidation(req, res, next) {
 const emailRule  = body('email').trim().isEmail().withMessage('Format email tidak valid').normalizeEmail();
 const passRule   = body('password').isLength({ min: 8 }).withMessage('Password minimal 8 karakter');
 const nameRule   = body('name').trim().notEmpty().withMessage('Nama wajib diisi').isLength({ max: 100 }).withMessage('Nama maksimal 100 karakter');
-const shopIdRule = body('shopId').trim().notEmpty().withMessage('shopId wajib diisi').isUUID().withMessage('shopId harus berformat UUID');
+const shopIdOptRule = body('shopId')
+  .optional({ nullable: true, checkFalsy: true })
+  .isUUID().withMessage('shopId harus berformat UUID');
 
 exports.login = [
   emailRule,
@@ -23,8 +25,8 @@ exports.login = [
   handleValidation,
 ];
 
-exports.registerAdmin = [nameRule, emailRule, passRule, shopIdRule, handleValidation];
-exports.registerUser  = [nameRule, emailRule, passRule, shopIdRule, handleValidation];
+exports.registerAdmin = [nameRule, emailRule, passRule, shopIdOptRule, handleValidation];
+exports.registerUser  = [nameRule, emailRule, passRule, shopIdOptRule, handleValidation];
 
 exports.forgotPassword = [emailRule, handleValidation];
 
