@@ -1,0 +1,1583 @@
+{
+  "info": {
+    "_postman_id": "pos-backend-api-complete",
+    "name": "POS Backend API",
+    "description": "Complete Postman collection for POS Backend. Base URL: http://localhost:5000/api\n\n**Setup:**\n1. Import collection\n2. Hit 'Login' — accessToken & refreshToken otomatis tersimpan\n3. Isi variable shopId, productId, dll. setelah create masing-masing resource\n\n**shopAccess:** endpoint bertanda [shop-filtered] butuh query param shopId (opsional untuk superAdmin, wajib untuk admin/user jika tidak ter-assign otomatis)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl",         "value": "http://localhost:5000/api", "type": "string" },
+    { "key": "accessToken",     "value": "",  "type": "string" },
+    { "key": "refreshToken",    "value": "",  "type": "string" },
+    { "key": "shopId",          "value": "",  "type": "string" },
+    { "key": "userId",          "value": "",  "type": "string" },
+    { "key": "productId",       "value": "",  "type": "string" },
+    { "key": "variantId",       "value": "",  "type": "string" },
+    { "key": "categoryId",      "value": "",  "type": "string" },
+    { "key": "customerId",      "value": "",  "type": "string" },
+    { "key": "transactionId",   "value": "",  "type": "string" },
+    { "key": "invoiceNo",       "value": "",  "type": "string" },
+    { "key": "transferId",      "value": "",  "type": "string" },
+    { "key": "refundId",        "value": "",  "type": "string" },
+    { "key": "sessionId",       "value": "",  "type": "string" },
+    { "key": "inventoryId",     "value": "",  "type": "string" },
+    { "key": "notificationId",  "value": "",  "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('accessToken',  json.data.accessToken);",
+                  "  pm.collectionVariables.set('refreshToken', json.data.refreshToken);",
+                  "  console.log('Tokens saved successfully');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login dengan email & password. accessToken dan refreshToken otomatis tersimpan ke collection variable."
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('accessToken', json.data.accessToken);",
+                  "  console.log('accessToken refreshed');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          }
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Admin Baru\",\n  \"email\": \"adminbaru@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register", "admin"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        },
+        {
+          "name": "Register User (Kasir)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kasir Baru\",\n  \"email\": \"kasir@example.com\",\n  \"password\": \"password123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register/user",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register", "user"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "forgot-password"]
+            },
+            "description": "Rate limit: 5 req / 15 menit."
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"RESET_TOKEN_DARI_EMAIL\",\n  \"newPassword\": \"newpassword123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "reset-password"]
+            },
+            "description": "Rate limit: 5 req / 15 menit. Password min 8 karakter."
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "change-password"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Profile",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Baru\",\n  \"phone\": \"08123456789\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Upload Profile Photo",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photo",
+                  "type": "file",
+                  "src": "",
+                  "description": "Max 2MB. Format: JPG/PNG/WebP"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/profile/photo",
+              "host": ["{{baseUrl}}"],
+              "path": ["profile", "photo"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏪 Shops",
+      "item": [
+        {
+          "name": "List Shops",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops"]
+            }
+          }
+        },
+        {
+          "name": "Create Shop",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('shopId', json.data.id);",
+                  "  console.log('shopId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Toko Cabang A\",\n  \"address\": \"Jl. Raya No. 1, Jakarta\",\n  \"phone\": \"021-12345678\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shops",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops"]
+            },
+            "description": "Hanya superAdmin. shopId otomatis tersimpan."
+          }
+        },
+        {
+          "name": "Get Shop",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops/{{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", "{{shopId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Shop",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Toko Cabang A Updated\",\n  \"address\": \"Jl. Baru No. 2, Jakarta\",\n  \"phone\": \"021-99999999\",\n  \"is_active\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shops/{{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", "{{shopId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Delete Shop",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops/{{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", "{{shopId}}"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        },
+        {
+          "name": "List Shop Staff",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops/{{shopId}}/staff",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", "{{shopId}}", "staff"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Assign Staff to Shop",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shops/{{shopId}}/staff",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", "{{shopId}}", "staff"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Remove Staff from Shop",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shops/{{shopId}}/staff/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["shops", "{{shopId}}", "staff", "{{userId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Users",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "page",   "value": "1",    "disabled": true },
+                { "key": "limit",  "value": "10",   "disabled": true },
+                { "key": "role",   "value": "admin", "disabled": true },
+                { "key": "search", "value": "",     "disabled": true }
+              ]
+            },
+            "description": "Hanya superAdmin."
+          }
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Nama Update\",\n  \"phone\": \"08198765432\",\n  \"is_active\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{userId}}"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Categories",
+      "item": [
+        {
+          "name": "List Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            }
+          }
+        },
+        {
+          "name": "Create Category",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('categoryId', json.data.id);",
+                  "  console.log('categoryId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Minuman\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Minuman Segar\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "{{categoryId}}"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        },
+        {
+          "name": "Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/categories/{{categoryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["categories", "{{categoryId}}"]
+            },
+            "description": "Hanya superAdmin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛒 Customers",
+      "item": [
+        {
+          "name": "List Customers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"],
+              "query": [
+                { "key": "search", "value": "",    "disabled": true },
+                { "key": "page",   "value": "1",   "disabled": true },
+                { "key": "limit",  "value": "10",  "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('customerId', json.data.id);",
+                  "  console.log('customerId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"phone\": \"08123456789\",\n  \"email\": \"budi@example.com\",\n  \"address\": \"Jl. Merdeka No. 5\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso Updated\",\n  \"phone\": \"08199999999\",\n  \"address\": \"Jl. Baru No. 10\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Get Customer Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/customers/{{customerId}}/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["customers", "{{customerId}}", "transactions"],
+              "query": [
+                { "key": "page",  "value": "1",  "disabled": true },
+                { "key": "limit", "value": "10", "disabled": true }
+              ]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "search",     "value": "",     "disabled": true },
+                { "key": "categoryId", "value": "",     "disabled": true },
+                { "key": "is_active",  "value": "true", "disabled": true },
+                { "key": "page",       "value": "1",    "disabled": true },
+                { "key": "limit",      "value": "10",   "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Product (with Variants)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('productId', json.data.id);",
+                  "  console.log('productId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name",        "value": "Kopi Arabika",   "type": "text" },
+                { "key": "categoryId",  "value": "{{categoryId}}", "type": "text" },
+                { "key": "description", "value": "Kopi arabika premium dari Aceh", "type": "text" },
+                {
+                  "key": "variants",
+                  "value": "[{\"name\":\"250gr\",\"sku\":\"KOPI-ARB-250\",\"price\":45000},{\"name\":\"500gr\",\"sku\":\"KOPI-ARB-500\",\"price\":85000}]",
+                  "type": "text",
+                  "description": "JSON string array of variants"
+                },
+                {
+                  "key": "images[0]",
+                  "type": "file",
+                  "src": "",
+                  "description": "Gambar untuk variants[0] (opsional, max 2MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            },
+            "description": "superAdmin atau admin. Body: multipart/form-data. variants adalah JSON string."
+          }
+        },
+        {
+          "name": "Get Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Kopi Arabika Premium\",\n  \"description\": \"Kopi arabika pilihan\",\n  \"categoryId\": \"{{categoryId}}\",\n  \"is_active\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Get Variant by Barcode",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/variants/by-barcode/BARCODE123",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "variants", "by-barcode", "BARCODE123"]
+            }
+          }
+        },
+        {
+          "name": "List Product Variants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}/variants",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}", "variants"]
+            }
+          }
+        },
+        {
+          "name": "Create Variant",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('variantId', json.data.id);",
+                  "  console.log('variantId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name",    "value": "1kg",            "type": "text" },
+                { "key": "sku",     "value": "KOPI-ARB-1000",  "type": "text" },
+                { "key": "barcode", "value": "8991234567890",   "type": "text" },
+                { "key": "price",   "value": "150000",         "type": "text" },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "",
+                  "description": "Gambar variant (opsional, max 2MB)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}/variants",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}", "variants"]
+            },
+            "description": "superAdmin atau admin. variantId otomatis tersimpan."
+          }
+        },
+        {
+          "name": "Get Variant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}/variants/{{variantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}", "variants", "{{variantId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Variant",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name",      "value": "1kg Spesial",   "type": "text" },
+                { "key": "price",     "value": "160000",        "type": "text" },
+                { "key": "barcode",   "value": "8991234567891", "type": "text" },
+                { "key": "is_active", "value": "true",          "type": "text" },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "",
+                  "description": "Gambar baru (opsional)"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}/variants/{{variantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}", "variants", "{{variantId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Delete Variant",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}/variants/{{variantId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}", "variants", "{{variantId}}"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏬 Inventory",
+      "item": [
+        {
+          "name": "List Inventory [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inventory?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["inventory"],
+              "query": [
+                { "key": "shopId",    "value": "{{shopId}}", "disabled": false },
+                { "key": "search",    "value": "",           "disabled": true },
+                { "key": "low_stock", "value": "true",       "disabled": true, "description": "Filter stok di bawah threshold" },
+                { "key": "page",      "value": "1",          "disabled": true },
+                { "key": "limit",     "value": "10",         "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Inventory Movements [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/movements?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["inventory", "movements"],
+              "query": [
+                { "key": "shopId",    "value": "{{shopId}}", "disabled": false },
+                { "key": "variantId", "value": "",           "disabled": true },
+                { "key": "type",      "value": "",           "disabled": true, "description": "sale | restock | transfer_in | transfer_out | adjustment | refund" },
+                { "key": "startDate", "value": "2026-01-01", "disabled": true },
+                { "key": "endDate",   "value": "2026-12-31", "disabled": true },
+                { "key": "page",      "value": "1",          "disabled": true },
+                { "key": "limit",     "value": "10",         "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Inventory by Product [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inventory/products/{{productId}}?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["inventory", "products", "{{productId}}"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Restock Inventory",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shopId\": \"{{shopId}}\",\n  \"productVariantId\": \"{{variantId}}\",\n  \"qty\": 50,\n  \"costPrice\": 30000,\n  \"note\": \"Restock dari supplier\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/inventory/restock",
+              "host": ["{{baseUrl}}"],
+              "path": ["inventory", "restock"]
+            },
+            "description": "superAdmin atau admin. qty > 0, costPrice >= 0."
+          }
+        },
+        {
+          "name": "Adjustment Out (Pengurangan)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shopId\": \"{{shopId}}\",\n  \"productVariantId\": \"{{variantId}}\",\n  \"qty\": 5,\n  \"note\": \"Barang rusak/hilang\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/inventory/adjustment-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["inventory", "adjustment-out"]
+            },
+            "description": "superAdmin atau admin. qty > 0 (akan otomatis dikurangkan)."
+          }
+        },
+        {
+          "name": "Update Low Stock Threshold",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"low_stock_threshold\": 10\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/inventory/{{inventoryId}}/threshold",
+              "host": ["{{baseUrl}}"],
+              "path": ["inventory", "{{inventoryId}}", "threshold"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔄 Transfers",
+      "item": [
+        {
+          "name": "Create Transfer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('transferId', json.data.id);",
+                  "  console.log('transferId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromShopId\": \"{{shopId}}\",\n  \"toShopId\": \"SHOP_ID_TUJUAN\",\n  \"note\": \"Transfer stok ke cabang\",\n  \"items\": [\n    {\n      \"productVariantId\": \"{{variantId}}\",\n      \"qty\": 10,\n      \"note\": \"Stok menipis di cabang tujuan\"\n    }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers"]
+            },
+            "description": "superAdmin atau admin. from_shop_id != to_shop_id."
+          }
+        },
+        {
+          "name": "List Outgoing Transfers [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transfers/outgoing?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "outgoing"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false },
+                { "key": "status", "value": "pending",    "disabled": true, "description": "pending | approved | rejected | cancelled" },
+                { "key": "page",   "value": "1",          "disabled": true },
+                { "key": "limit",  "value": "10",         "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Incoming Transfers [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transfers/incoming?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "incoming"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false },
+                { "key": "status", "value": "pending",    "disabled": true },
+                { "key": "page",   "value": "1",          "disabled": true },
+                { "key": "limit",  "value": "10",         "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transfer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transfers/{{transferId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "{{transferId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get Transfer Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transfers/{{transferId}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "{{transferId}}", "items"]
+            }
+          }
+        },
+        {
+          "name": "Approve Transfer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Disetujui\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers/{{transferId}}/approve",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "{{transferId}}", "approve"]
+            },
+            "description": "Hanya transfer berstatus pending. Admin toko tujuan."
+          }
+        },
+        {
+          "name": "Reject Transfer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Stok tidak dibutuhkan\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers/{{transferId}}/reject",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "{{transferId}}", "reject"]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Cancel Transfer",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Dibatalkan oleh requester\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transfers/{{transferId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["transfers", "{{transferId}}", "cancel"]
+            },
+            "description": "superAdmin atau admin. Hanya transfer berstatus pending."
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Transactions",
+      "item": [
+        {
+          "name": "List Transactions [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions"],
+              "query": [
+                { "key": "shopId",         "value": "{{shopId}}", "disabled": false },
+                { "key": "status",         "value": "selesai",    "disabled": true, "description": "selesai | refunded" },
+                { "key": "paymentMethod",  "value": "cash",       "disabled": true, "description": "cash | qris" },
+                { "key": "customerId",     "value": "",           "disabled": true },
+                { "key": "startDate",      "value": "2026-01-01", "disabled": true },
+                { "key": "endDate",        "value": "2026-12-31", "disabled": true },
+                { "key": "page",           "value": "1",          "disabled": true },
+                { "key": "limit",          "value": "10",         "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Transaction (POS)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('transactionId', json.data.id);",
+                  "  pm.collectionVariables.set('invoiceNo', json.data.invoice_no);",
+                  "  console.log('transactionId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shopId\": \"{{shopId}}\",\n  \"customerId\": \"{{customerId}}\",\n  \"paymentMethod\": \"cash\",\n  \"note\": \"Transaksi walk-in\",\n  \"items\": [\n    {\n      \"productVariantId\": \"{{variantId}}\",\n      \"qty\": 2\n    }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions"]
+            },
+            "description": "Semua role. customerId opsional. paymentMethod: cash | qris."
+          }
+        },
+        {
+          "name": "Get Transaction [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/{{transactionId}}?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "{{transactionId}}"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction by Invoice [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/invoice/{{invoiceNo}}?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "invoice", "{{invoiceNo}}"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction Receipt [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transactions/{{transactionId}}/receipt?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "{{transactionId}}", "receipt"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cancel Transaction [shop-filtered]",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"note\": \"Pembatalan atas permintaan pelanggan\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transactions/{{transactionId}}/cancel?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["transactions", "{{transactionId}}", "cancel"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Refunds",
+      "item": [
+        {
+          "name": "List Refunds [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/refunds?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["refunds"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false },
+                { "key": "status", "value": "pending",    "disabled": true, "description": "pending | approved | rejected" },
+                { "key": "page",   "value": "1",          "disabled": true },
+                { "key": "limit",  "value": "10",         "disabled": true }
+              ]
+            },
+            "description": "superAdmin atau admin."
+          }
+        },
+        {
+          "name": "Create Refund",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('refundId', json.data.id);",
+                  "  console.log('refundId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"{{transactionId}}\",\n  \"reason\": \"Produk cacat / tidak sesuai pesanan\",\n  \"items\": [\n    {\n      \"transactionItemId\": \"TRANSACTION_ITEM_ID\",\n      \"qty\": 1\n    }\n  ]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/refunds",
+              "host": ["{{baseUrl}}"],
+              "path": ["refunds"]
+            },
+            "description": "Semua role. Isi transactionItemId dari detail transaksi."
+          }
+        },
+        {
+          "name": "Get Refund [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/refunds/{{refundId}}?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["refunds", "{{refundId}}"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": false }
+              ]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Summary [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/summary?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "summary"],
+              "query": [
+                { "key": "shopId",    "value": "{{shopId}}",  "disabled": false },
+                { "key": "startDate", "value": "2026-06-01",  "disabled": true },
+                { "key": "endDate",   "value": "2026-06-30",  "disabled": true },
+                { "key": "period",    "value": "monthly",     "disabled": true, "description": "daily | weekly | monthly | yearly" }
+              ]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🤖 AI Chat",
+      "item": [
+        {
+          "name": "List Sessions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ai/sessions",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai", "sessions"],
+              "query": [
+                { "key": "shopId", "value": "{{shopId}}", "disabled": true, "description": "Filter session scope=shop" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('sessionId', json.data.id);",
+                  "  console.log('sessionId saved:', json.data.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scope\": \"shop\",\n  \"shopId\": \"{{shopId}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ai/sessions",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai", "sessions"]
+            },
+            "description": "scope: 'global' (semua toko) atau 'shop' (butuh shopId)."
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ai/sessions/{{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai", "sessions", "{{sessionId}}"]
+            }
+          }
+        },
+        {
+          "name": "Send Message to AI",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Tunjukkan produk dengan stok paling rendah minggu ini\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ai/sessions/{{sessionId}}/chat",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai", "sessions", "{{sessionId}}", "chat"]
+            }
+          }
+        },
+        {
+          "name": "Delete Session",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ai/sessions/{{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai", "sessions", "{{sessionId}}"]
+            },
+            "description": "Soft delete — mengisi deleted_at."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🔔 Notifications",
+      "item": [
+        {
+          "name": "List Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"],
+              "query": [
+                { "key": "is_read", "value": "false", "disabled": true, "description": "true | false" },
+                { "key": "type",    "value": "",       "disabled": true, "description": "low_stock | transfer_incoming | transfer_confirmed | transfer_rejected | refund | system" },
+                { "key": "page",    "value": "1",      "disabled": true },
+                { "key": "limit",   "value": "20",     "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Unread Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/unread-count",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "unread-count"]
+            }
+          }
+        },
+        {
+          "name": "Mark All as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/read-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "read-all"]
+            }
+          }
+        },
+        {
+          "name": "Mark One as Read",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{notificationId}}/read",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "{{notificationId}}", "read"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Audit Logs",
+      "item": [
+        {
+          "name": "List Audit Logs [shop-filtered]",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/audit-logs?shopId={{shopId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["audit-logs"],
+              "query": [
+                { "key": "shopId",     "value": "{{shopId}}", "disabled": false },
+                { "key": "action",     "value": "",           "disabled": true, "description": "create | update | delete | login | logout" },
+                { "key": "entityType", "value": "",           "disabled": true, "description": "e.g. product, user, shop" },
+                { "key": "userId",     "value": "",           "disabled": true },
+                { "key": "startDate",  "value": "2026-01-01", "disabled": true },
+                { "key": "endDate",    "value": "2026-12-31", "disabled": true },
+                { "key": "page",       "value": "1",          "disabled": true },
+                { "key": "limit",      "value": "20",         "disabled": true }
+              ]
+            },
+            "description": "superAdmin atau admin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "❤️ Health Check",
+      "item": [
+        {
+          "name": "Server Health",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

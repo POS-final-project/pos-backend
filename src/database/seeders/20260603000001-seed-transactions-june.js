@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Supplemental seeder: transactions from 2026-05-24 to today (2026-06-03).
+ * Supplemental seeder: transactions from 2026-05-24 to 2026-06-24.
  * Reads live inventory state from DB so it continues where the main seeder left off.
  * UUID prefixes use 'e0/e1/e2/e3' namespaces — no collision with main seeder.
  */
@@ -21,7 +21,7 @@ const {
 // ─── Date range ───────────────────────────────────────────────────────────────
 
 const DATE_START = new Date("2026-05-24T00:00:00.000Z");
-const DATE_END   = new Date("2026-06-03T23:59:59.999Z");
+const DATE_END   = new Date("2026-06-24T23:59:59.999Z");
 
 // ─── ID generators (unique prefixes, no collision with main seeder) ───────────
 
